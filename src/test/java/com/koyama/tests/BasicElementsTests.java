@@ -15,6 +15,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import org.testng.Assert;
 
 public class BasicElementsTests {
@@ -78,14 +80,17 @@ public class BasicElementsTests {
       	driver.get("https://the-internet.herokuapp.com/");
 
       	By brokenImages = By.linkText("Broken Images");
-      	By textBroken = By.cssSelector("");
+      	By textBroken = By.xpath("//div[@id='content']//div[@class='example']/h3");
       	
       	
       	wait.until(ExpectedConditions.elementToBeClickable(brokenImages)).click();
         wait.until(ExpectedConditions.urlContains("/broken_images"));
         
+        WebElement h3 = wait.until(ExpectedConditions.visibilityOfElementLocated(textBroken));
+        
+        System.out.println(h3.getText());
 
-
+        Assert.assertEquals("Broken Images", h3.getText());
     }
     
     @Test
@@ -111,6 +116,49 @@ public class BasicElementsTests {
        
         Assert.assertEquals(texto, p.getText());
        
+    }
+    
+    @Test
+    public void shouldcheckboxes() throws InterruptedException{
+    	
+ 	   driver.get("https://the-internet.herokuapp.com/");
+
+ 	   By checkboxes = By.linkText("Checkboxes");
+ 	   By input = By.cssSelector("#checkboxes input[type='checkbox']");
+ 	   
+ 	   wait.until(ExpectedConditions.elementToBeClickable(checkboxes)).click();
+ 	   wait.until(ExpectedConditions.urlContains("/checkboxes"));
+ 	   	
+       List<WebElement> list = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(input)); 
+
+       int n = 2;
+       for(int i = 0; i < n; i++) {
+    	     
+    	    list.get(i).click();
+    	    Thread.sleep(2000);
+       }
+    	
+    }
+    
+    @Test
+    public void shouldContextMenu() throws InterruptedException{
+    	
+  	   driver.get("https://the-internet.herokuapp.com/");
+  	   
+  	   By menu = By.linkText("Context Menu");
+  	   By text = By.cssSelector("#content p:nth-of-type(1)");
+  	   
+  	   wait.until(ExpectedConditions.elementToBeClickable(menu)).click();
+  	   wait.until(ExpectedConditions.urlContains("/context_menu"));
+  	   
+  	   WebElement p = wait.until(ExpectedConditions.visibilityOfElementLocated(text));
+  	   
+  	   System.out.println(p.getText());
+  	   
+  	   String context = "Context menu items are custom additions that appear in the right-click menu";
+  	   
+  	   Assert.assertEquals(context, p.getText());
+
     }
 
     @AfterMethod

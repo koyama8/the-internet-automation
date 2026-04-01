@@ -5,7 +5,7 @@
     <classes>
       <class name="com.koyama.tests.BasicElementsTests">
         <methods>
-          <include name="shouldAddMultipleElementsChallengingDOM"/>
+          <include name="shouldContextMenu"/>
           <include name="setUp"/>
           <include name="tearDown"/>
         </methods>
