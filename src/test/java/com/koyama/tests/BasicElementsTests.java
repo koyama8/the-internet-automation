@@ -141,7 +141,7 @@ public class BasicElementsTests {
     }
     
     @Test
-    public void shouldContextMenu() throws InterruptedException{
+    public void shouldOpenContextMenuSuccessfully() throws InterruptedException{
     	
   	   driver.get("https://the-internet.herokuapp.com/");
   	   
@@ -155,10 +155,57 @@ public class BasicElementsTests {
   	   
   	   System.out.println(p.getText());
   	   
-  	   String context = "Context menu items are custom additions that appear in the right-click menu";
+  	   String context = "Context menu items are custom additions that appear in the right-click menu.";
   	   
   	   Assert.assertEquals(context, p.getText());
 
+    }
+    
+    @Test
+    public void shouldAddMultipleElementsDisappearingElements()throws InterruptedException {
+    	
+   	   driver.get("https://the-internet.herokuapp.com/");
+
+   	   By disappearing = By.linkText("Disappearing Elements");
+   	   By home = By.cssSelector("a[href='/']");
+       By aboutLink = By.xpath("//a[@href='/about/']");
+       By contactUs = By.xpath("//a[@href='/contact-us/']");
+       By portfolio = By.xpath("//a[@href='/portfolio/']");
+
+   	   
+   	   
+   	   wait.until(ExpectedConditions.elementToBeClickable(disappearing)).click();
+   	   wait.until(ExpectedConditions.urlContains("/disappearing_elements"));
+   	   Thread.sleep(3000);
+
+   	   wait.until(ExpectedConditions.elementToBeClickable(home)).click();
+   	   pause();
+   	   
+   	   wait.until(ExpectedConditions.elementToBeClickable(disappearing)).click();
+	   wait.until(ExpectedConditions.urlContains("/disappearing_elements"));
+   	   
+   	   
+      
+      openLinkAndReturn(aboutLink, "/about/");
+      openLinkAndReturn(contactUs, "/contact-us/");
+      openLinkAndReturn(portfolio, "/portfolio/");
+      
+    }
+    
+    
+    private void openLinkAndReturn(By link, String expectedUrlPart) throws InterruptedException {
+    	
+    	  wait.until(ExpectedConditions.elementToBeClickable(link)).click();
+    	  wait.until(ExpectedConditions.urlContains(expectedUrlPart));
+    	  pause();
+    	  
+    	  driver.navigate().back();
+    	  wait.until(ExpectedConditions.urlContains("/disappearing_elements"));
+    	  pause();  	     	 
+    }
+    
+    private void pause() throws InterruptedException{
+     	 Thread.sleep(3000);
     }
 
     @AfterMethod
