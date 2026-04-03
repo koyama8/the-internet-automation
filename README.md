@@ -1,4 +1,5 @@
-# 🤖 The Internet Automation
+# 🤖 The Internet Automation  
+> [EM DESENVOLVIMENTO]
 
 <p align="center">
   Projeto de automação web com <strong>Java, Selenium, TestNG e Maven</strong>, construído com foco em boas práticas, organização escalável e evolução contínua da arquitetura de testes.
