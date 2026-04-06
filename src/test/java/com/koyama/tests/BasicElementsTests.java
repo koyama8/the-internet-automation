@@ -1,217 +1,131 @@
 package com.koyama.tests;
 
-import static org.testng.Assert.assertEquals;
-
-import java.time.Duration;
-import java.util.Iterator;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterMethod;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import com.koyama.base.BaseTest;
+import com.koyama.pages.TheInternetPage;
 
-import org.testng.Assert;
+public class BasicElementsTests extends BaseTest {
 
-public class BasicElementsTests {
-
-    protected WebDriver driver;
-    protected WebDriverWait wait;
+    private TheInternetPage page;
 
     @BeforeMethod
-    public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    public void initPage() {
+        page = new TheInternetPage(driver, wait);
     }
-    
-    
+
     @Test
-    public void shouldOpenABTestingPageAndDisplayParagraph(){
-    	
-        driver.get("https://the-internet.herokuapp.com/");
+    public void shouldOpenABTestingPageAndDisplayParagraph() {
+        page.openHomePage();
+        page.goToABTesting();
 
-        By linkABTesting  = By.linkText("A/B Testing");
-        By paragrafoABTesting  = By.xpath("//div[@id='content']//div[@class='example']/p");
-        
-        wait.until(ExpectedConditions.elementToBeClickable(linkABTesting)).click();
-        wait.until(ExpectedConditions.urlContains("/abtest"));
-        
-        
-        WebElement textoParagrafo = wait.until(
-        		ExpectedConditions.visibilityOfElementLocated(paragrafoABTesting)
-        		);
-        
-        System.out.print(textoParagrafo.getText());     
-              
+        String paragraphText = page.getABTestingParagraphText();
+
+        Assert.assertTrue(
+            paragraphText.contains("Also known as split testing"),
+            "O parágrafo da página A/B Testing não contém o texto esperado."
+        );
     }
-    
+
     @Test
-    public void shouldAddMultipleElementsSuccessfully() throws InterruptedException{
-    	
-      	driver.get("https://the-internet.herokuapp.com/");
-      	
-      	By linkAddRemoveElements = By.linkText("Add/Remove Elements");
-      	By buttonaAdd = By.cssSelector("button[onclick='addElement()']");
-      	
-      	wait.until(ExpectedConditions.elementToBeClickable(linkAddRemoveElements)).click();
-      	wait.until(ExpectedConditions.urlContains("/add_remove_elements/"));
-      	
-      	int n = 5;
-      	
-      	
-      	for(int i = 0; i <= n; i++) {
-      		wait.until(ExpectedConditions.elementToBeClickable(buttonaAdd)).click();
-      		Thread.sleep(1500);
-      	}
-      	  
+    public void shouldAddFiveElementsSuccessfully() {
+        page.openHomePage();
+        page.goToAddRemoveElements();
+
+        page.addElements(5);
+
+        Assert.assertEquals(
+            page.getDeleteButtonsCount(),
+            5,
+            "A quantidade de botões Delete deveria ser 5."
+        );
     }
-    
+
     @Test
-    public void shouldOpenBrokenImagesPageSuccessfully(){
-    	
-      	driver.get("https://the-internet.herokuapp.com/");
+    public void shouldOpenBrokenImagesPageSuccessfully() {
+        page.openHomePage();
+        page.goToBrokenImages();
 
-      	By brokenImages = By.linkText("Broken Images");
-      	By textBroken = By.xpath("//div[@id='content']//div[@class='example']/h3");
-      	
-      	
-      	wait.until(ExpectedConditions.elementToBeClickable(brokenImages)).click();
-        wait.until(ExpectedConditions.urlContains("/broken_images"));
-        
-        WebElement h3 = wait.until(ExpectedConditions.visibilityOfElementLocated(textBroken));
-        
-        System.out.println(h3.getText());
-
-        Assert.assertEquals("Broken Images", h3.getText());
+        Assert.assertEquals(
+            page.getBrokenImagesTitleText(),
+            "Broken Images",
+            "O título da página Broken Images está incorreto."
+        );
     }
-    
+
     @Test
-    public void shouldAddMultipleElementsChallengingDOM()  throws InterruptedException {
-      	  	   
-    	   driver.get("https://the-internet.herokuapp.com/");
-       By challenging = By.linkText("Challenging DOM");
-       By buttonqux = By.cssSelector("a.button.success");
-       By text = By.cssSelector("p");
-       
-       wait.until(ExpectedConditions.elementToBeClickable(challenging)).click();
-       wait.until(ExpectedConditions.urlContains("/challenging_dom"));
-       
-       int n = 5;
-       
-       for(int i = 0; i < n; i++) {
-    	      wait.until(ExpectedConditions.elementToBeClickable(buttonqux)).click();
-    	      Thread.sleep(1500);
-       }
-                       
-       String texto = "The hardest part in automated web testing is finding the best locators (e.g., ones that well named, unique, and unlikely to change). It's more often than not that the application you're testing was not built with this concept in mind. This example demonstrates that with unique IDs, a table with no helpful locators, and a canvas element.";
-       WebElement p = wait.until(ExpectedConditions.visibilityOfElementLocated(text));
-       
-        Assert.assertEquals(texto, p.getText());
-       
+    public void shouldOpenChallengingDomPageAndValidateParagraph() {
+        page.openHomePage();
+        page.goToChallengingDom();
+        page.clickQuxButtonMultipleTimes(5);
+
+        String paragraphText = page.getChallengingDomParagraphText();
+
+        Assert.assertTrue(
+            paragraphText.contains("The hardest part in automated web testing"),
+            "O texto principal da página Challenging DOM não foi encontrado."
+        );
     }
-    
+
     @Test
-    public void shouldcheckboxes() throws InterruptedException{
-    	
- 	   driver.get("https://the-internet.herokuapp.com/");
+    public void shouldSelectAllCheckboxesSuccessfully() {
+        page.openHomePage();
+        page.goToCheckboxes();
 
- 	   By checkboxes = By.linkText("Checkboxes");
- 	   By input = By.cssSelector("#checkboxes input[type='checkbox']");
- 	   
- 	   wait.until(ExpectedConditions.elementToBeClickable(checkboxes)).click();
- 	   wait.until(ExpectedConditions.urlContains("/checkboxes"));
- 	   	
-       List<WebElement> list = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(input)); 
+        page.selectAllCheckboxes();
 
-       int n = 2;
-       for(int i = 0; i < n; i++) {
-    	     
-    	    list.get(i).click();
-    	    Thread.sleep(2000);
-       }
-    	
+        Assert.assertTrue(
+            page.areAllCheckboxesSelected(),
+            "Nem todos os checkboxes ficaram marcados."
+        );
     }
-    
+
     @Test
-    public void shouldOpenContextMenuSuccessfully() throws InterruptedException{
-    	
-  	   driver.get("https://the-internet.herokuapp.com/");
-  	   
-  	   By menu = By.linkText("Context Menu");
-  	   By text = By.cssSelector("#content p:nth-of-type(1)");
-  	   
-  	   wait.until(ExpectedConditions.elementToBeClickable(menu)).click();
-  	   wait.until(ExpectedConditions.urlContains("/context_menu"));
-  	   
-  	   WebElement p = wait.until(ExpectedConditions.visibilityOfElementLocated(text));
-  	   
-  	   System.out.println(p.getText());
-  	   
-  	   String context = "Context menu items are custom additions that appear in the right-click menu.";
-  	   
-  	   Assert.assertEquals(context, p.getText());
+    public void shouldOpenContextMenuPageSuccessfully() {
+        page.openHomePage();
+        page.goToContextMenu();
 
+        Assert.assertEquals(
+            page.getContextMenuDescriptionText(),
+            "Context menu items are custom additions that appear in the right-click menu.",
+            "O texto descritivo da página Context Menu está incorreto."
+        );
     }
-    
+
     @Test
-    public void shouldAddMultipleElementsDisappearingElements()throws InterruptedException {
-    	
-   	   driver.get("https://the-internet.herokuapp.com/");
+    public void shouldNavigateThroughDisappearingElementsAndReturn() {
+        page.openHomePage();
+        page.goToDisappearingElements();
+        page.clickHomeAndReturnToDisappearingElements();
 
-   	   By disappearing = By.linkText("Disappearing Elements");
-   	   By home = By.cssSelector("a[href='/']");
-       By aboutLink = By.xpath("//a[@href='/about/']");
-       By contactUs = By.xpath("//a[@href='/contact-us/']");
-       By portfolio = By.xpath("//a[@href='/portfolio/']");
+        page.openLinkAndReturn("About", "/about/");
+        page.openLinkAndReturn("Contact Us", "/contact-us/");
+        page.openLinkAndReturn("Portfolio", "/portfolio/");
 
-   	   
-   	   
-   	   wait.until(ExpectedConditions.elementToBeClickable(disappearing)).click();
-   	   wait.until(ExpectedConditions.urlContains("/disappearing_elements"));
-   	   Thread.sleep(3000);
-
-   	   wait.until(ExpectedConditions.elementToBeClickable(home)).click();
-   	   pause();
-   	   
-   	   wait.until(ExpectedConditions.elementToBeClickable(disappearing)).click();
-	   wait.until(ExpectedConditions.urlContains("/disappearing_elements"));
-   	   
-   	   
-      
-      openLinkAndReturn(aboutLink, "/about/");
-      openLinkAndReturn(contactUs, "/contact-us/");
-      openLinkAndReturn(portfolio, "/portfolio/");
-      
-    }
-    
-    
-    private void openLinkAndReturn(By link, String expectedUrlPart) throws InterruptedException {
-    	
-    	  wait.until(ExpectedConditions.elementToBeClickable(link)).click();
-    	  wait.until(ExpectedConditions.urlContains(expectedUrlPart));
-    	  pause();
-    	  
-    	  driver.navigate().back();
-    	  wait.until(ExpectedConditions.urlContains("/disappearing_elements"));
-    	  pause();  	     	 
-    }
-    
-    private void pause() throws InterruptedException{
-     	 Thread.sleep(3000);
+        Assert.assertTrue(
+            page.isOnDisappearingElementsPage(),
+            "O teste deveria terminar na página Disappearing Elements."
+        );
     }
 
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+    @Test
+    public void shouldDragAndDropColumnsSuccessfully() {
+        page.openHomePage();
+        page.goToDragAndDrop();
+        page.dragColumnAToColumnB();
+
+        Assert.assertEquals(
+            page.getColumnAHeaderText(),
+            "B",
+            "A coluna A deveria conter o header B após o drag and drop."
+        );
+
+        Assert.assertEquals(
+            page.getColumnBHeaderText(),
+            "A",
+            "A coluna B deveria conter o header A após o drag and drop."
+        );
     }
 }
