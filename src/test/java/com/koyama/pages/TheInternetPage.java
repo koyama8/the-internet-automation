@@ -28,9 +28,15 @@ public class TheInternetPage {
     private final By dragAndDropLink = By.linkText("Drag and Drop");
     private final By dynamicContentLink = By.linkText("Dynamic Content");
     private final By dropdown = By.linkText("Dropdown");
+    private final By dynamicControls = By.linkText("Dynamic Controls");
 
     // A/B Testing
     private final By abTestingParagraph = By.xpath("//div[@id='content']//div[@class='example']/p");
+    
+    private final By btn = By.xpath("//form[@id='checkbox-example']//button[@onclick='swapCheckbox()']");
+    private final By btnEnable =  By.xpath("//form[@id='input-example']//button[@onclick='swapInput()']");
+    private final By text = By.xpath("//p[@id='message']");
+    
 
     // Add/Remove Elements
     private final By addElementButton = By.cssSelector("button[onclick='addElement()']");
@@ -177,10 +183,23 @@ public class TheInternetPage {
         Select select = new Select(visible(columnDropdown));
         select.selectByVisibleText(optionText);
         pause(3000);
-        
-        
-    	
+ 	
     }
+    
+    public void selectButton() {
+
+    	int  n = 1;
+    	for (int i = 0; i <= n; i++) {
+			wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
+			pause(3000);
+		}
+    	
+    	wait.until(ExpectedConditions.elementToBeClickable(btnEnable)).click();
+    	pause(3000);
+    	
+            	  	   	
+    }
+    
 
     // Context Menu
     public void goToContextMenu() {
@@ -199,7 +218,13 @@ public class TheInternetPage {
     public void goToContextDynamic() {
     	click(dynamicContentLink);
     	waitForUrl("/dynamic_content");
-    	pause(3000);
+    	pause(2000);
+    }
+    
+    public void goToContextDynamicControls() {
+    	click(dynamicControls);
+    	waitForUrl("/dynamic_controls");
+        pause(2000);
     }
 
     public String getContextMenuDescriptionText() {
@@ -208,6 +233,10 @@ public class TheInternetPage {
     
     public String getContextDynamicDescriptionText() {
     	return visible(contentDynamicParagraph).getText();
+    }
+    
+    public String getContextDynamicControlsDescriptionText(){
+    	return visible(text).getText();
     }
     
 

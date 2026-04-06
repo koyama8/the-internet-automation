@@ -105,6 +105,16 @@ public class BasicElementsTests extends BaseTest {
     
     
     @Test
+    public void contentDynamicSelectControls( ) {
+    	page.openHomePage();
+    	page.goToContextDynamicControls();
+    	
+    	page.selectButton();
+    	Assert.assertEquals(page.getContextDynamicControlsDescriptionText(), "It's enabled!");
+    	
+    }
+    
+    @Test
     public void shouldSelectDropdown() {
     	page.openHomePage();
     	page.gotoDropdown();

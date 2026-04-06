@@ -5,9 +5,9 @@
     <classes>
       <class name="com.koyama.tests.BasicElementsTests">
         <methods>
-          <include name="contentDynamicParagraph"/>
           <include name="initPage"/>
           <include name="setUp"/>
+          <include name="contentDynamicSelectControls"/>
           <include name="tearDown"/>
         </methods>
       </class> <!-- com.koyama.tests.BasicElementsTests -->
