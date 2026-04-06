@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.Select;
 
 public class TheInternetPage {
 
@@ -25,6 +26,8 @@ public class TheInternetPage {
     private final By contextMenuLink = By.linkText("Context Menu");
     private final By disappearingElementsLink = By.linkText("Disappearing Elements");
     private final By dragAndDropLink = By.linkText("Drag and Drop");
+    private final By dynamicContentLink = By.linkText("Dynamic Content");
+    private final By dropdown = By.linkText("Dropdown");
 
     // A/B Testing
     private final By abTestingParagraph = By.xpath("//div[@id='content']//div[@class='example']/p");
@@ -46,6 +49,10 @@ public class TheInternetPage {
     // Context Menu
     private final By contextMenuParagraph = By.cssSelector("#content p:nth-of-type(1)");
 
+    // Dynamic Content
+    private final By contentDynamicParagraph = By.cssSelector("#content p:nth-of-type(1)");
+
+    
     // Disappearing Elements
     private final By homeLink = By.cssSelector("a[href='/']");
 
@@ -54,6 +61,10 @@ public class TheInternetPage {
     private final By columnB = By.id("column-b");
     private final By headerA = By.cssSelector("#column-a header");
     private final By headerB = By.cssSelector("#column-b header");
+    
+    //Dropdown
+    private final By columnDropdown = By.id("dropdown");
+    
 
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -136,6 +147,7 @@ public class TheInternetPage {
     public void goToCheckboxes() {
         click(checkboxesLink);
         waitForUrl("/checkboxes");
+        pause(3000);
     }
 
     public void selectAllCheckboxes() {
@@ -159,16 +171,45 @@ public class TheInternetPage {
 
         return true;
     }
+    
+    
+    public void selectDropdownOptionByText(String optionText) {
+        Select select = new Select(visible(columnDropdown));
+        select.selectByVisibleText(optionText);
+        pause(3000);
+        
+        
+    	
+    }
 
     // Context Menu
     public void goToContextMenu() {
         click(contextMenuLink);
         waitForUrl("/context_menu");
     }
+    
+    //Dropdown 
+    public void gotoDropdown() {
+    	click(dropdown);
+    	waitForUrl("/dropdown");
+    	pause(3000);
+    }
+    
+    // Dynamic Content
+    public void goToContextDynamic() {
+    	click(dynamicContentLink);
+    	waitForUrl("/dynamic_content");
+    	pause(3000);
+    }
 
     public String getContextMenuDescriptionText() {
         return visible(contextMenuParagraph).getText();
     }
+    
+    public String getContextDynamicDescriptionText() {
+    	return visible(contentDynamicParagraph).getText();
+    }
+    
 
     // Disappearing Elements
     public void goToDisappearingElements() {
@@ -210,6 +251,16 @@ public class TheInternetPage {
 
         wait.until(ExpectedConditions.textToBe(headerA, "B"));
         wait.until(ExpectedConditions.textToBe(headerB, "A"));
+    }
+    
+    
+    private void pause(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("A execução foi interrompida durante a pausa.", e);
+        }
     }
 
     public String getColumnAHeaderText() {

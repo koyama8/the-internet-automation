@@ -93,6 +93,29 @@ public class BasicElementsTests extends BaseTest {
             "O texto descritivo da página Context Menu está incorreto."
         );
     }
+    
+    @Test
+    public void contentDynamicParagraph() {
+    	page.openHomePage();
+    	page.goToContextDynamic();
+    	
+    	Assert.assertEquals(page.getContextDynamicDescriptionText(),
+         "This example demonstrates the ever-evolving nature of content by loading new text and images on each page refresh.");
+    }
+    
+    
+    @Test
+    public void shouldSelectDropdown() {
+    	page.openHomePage();
+    	page.gotoDropdown();
+    	
+    	String[] options = {"Option 1","Option 2"};
+    	
+    	for (String option : options) {
+			
+    		page.selectDropdownOptionByText(option);
+		}    	
+    }
 
     @Test
     public void shouldNavigateThroughDisappearingElementsAndReturn() {
@@ -116,16 +139,8 @@ public class BasicElementsTests extends BaseTest {
         page.goToDragAndDrop();
         page.dragColumnAToColumnB();
 
-        Assert.assertEquals(
-            page.getColumnAHeaderText(),
-            "B",
-            "A coluna A deveria conter o header B após o drag and drop."
-        );
+        Assert.assertEquals(page.getColumnAHeaderText(),"B","A coluna A deveria conter o header B após o drag and drop.");
 
-        Assert.assertEquals(
-            page.getColumnBHeaderText(),
-            "A",
-            "A coluna B deveria conter o header A após o drag and drop."
-        );
+        Assert.assertEquals(page.getColumnBHeaderText(),"A","A coluna B deveria conter o header A após o drag and drop.");
     }
 }

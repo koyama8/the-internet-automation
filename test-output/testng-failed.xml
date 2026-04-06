@@ -5,7 +5,8 @@
     <classes>
       <class name="com.koyama.tests.BasicElementsTests">
         <methods>
-          <include name="openLinkDragandDrop"/>
+          <include name="contentDynamicParagraph"/>
+          <include name="initPage"/>
           <include name="setUp"/>
           <include name="tearDown"/>
         </methods>
