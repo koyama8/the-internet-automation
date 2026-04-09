@@ -115,6 +115,23 @@ public class BasicElementsTests extends BaseTest {
     }
     
     @Test
+    public void contentDynamicLoading( ) {
+    	 page.openHomePage();
+    	 page.gotToContextDynamicLoading();
+    	 
+    	 Assert.assertEquals(page.getContextDynamicLoadingDescriptionText(), 
+     "It's common to see an action get triggered that returns a result dynamically. It does not rely on the page to reload or finish loading. The page automatically gets updated (e.g. hiding elements, showing elements, updating copy, etc) through the use of JavaScript.");
+    	 
+    	 page.selectLinkElementExample1();
+    	 Assert.assertEquals(page.getContextDynamicLoadingDescriptionTextFinish(), "Hello World!");
+    	 
+    	 page.navigateBack("/dynamic_loading");
+    	 
+    	 page.selectLinkElementExample2();
+    	 Assert.assertEquals(page.getContextDynamicLoadingTitle(), "Dynamically Loaded Page Elements");
+    }
+    
+    @Test
     public void shouldSelectDropdown() {
     	page.openHomePage();
     	page.gotoDropdown();

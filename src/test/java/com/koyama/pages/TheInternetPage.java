@@ -29,6 +29,8 @@ public class TheInternetPage {
     private final By dynamicContentLink = By.linkText("Dynamic Content");
     private final By dropdown = By.linkText("Dropdown");
     private final By dynamicControls = By.linkText("Dynamic Controls");
+    private final By dynamicLoading = By.linkText("Dynamic Loading");
+
 
     // A/B Testing
     private final By abTestingParagraph = By.xpath("//div[@id='content']//div[@class='example']/p");
@@ -58,6 +60,9 @@ public class TheInternetPage {
     // Dynamic Content
     private final By contentDynamicParagraph = By.cssSelector("#content p:nth-of-type(1)");
 
+    private final By contentDynamicParagraphLoading = By.cssSelector("#content p:nth-of-type(1)");
+    private final By contentDynamicParagraphLoading1 = By.id("finish");
+    private final By contentDynamicTitle = By.cssSelector("#content h3 ");
     
     // Disappearing Elements
     private final By homeLink = By.cssSelector("a[href='/']");
@@ -70,6 +75,12 @@ public class TheInternetPage {
     
     //Dropdown
     private final By columnDropdown = By.id("dropdown");
+    
+    // Dynamically Loaded
+    private final By example1 = By.cssSelector("#content a[href='/dynamic_loading/1'");
+    private final By buttonExample1 = By.cssSelector("#start button");
+    private final By buttonExample2 = By.cssSelector("#content a[href='/dynamic_loading/2'");
+    
     
 
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
@@ -200,6 +211,20 @@ public class TheInternetPage {
             	  	   	
     }
     
+    public void selectLinkElementExample1() {
+    	
+    	 wait.until(ExpectedConditions.elementToBeClickable(example1)).click();
+    	 wait.until(ExpectedConditions.elementToBeClickable(buttonExample1)).click();
+    	 pause(3000); 	 
+    }
+    
+    public void selectLinkElementExample2() {
+    	   
+     wait.until(ExpectedConditions.elementToBeClickable(buttonExample2)).click();
+     pause(3000);
+    }
+   
+    
 
     // Context Menu
     public void goToContextMenu() {
@@ -227,6 +252,12 @@ public class TheInternetPage {
         pause(2000);
     }
 
+    public void gotToContextDynamicLoading() {
+    	click(dynamicLoading);
+    	waitForUrl("/dynamic_loading");
+    	pause(2000);
+    }
+    
     public String getContextMenuDescriptionText() {
         return visible(contextMenuParagraph).getText();
     }
@@ -237,6 +268,18 @@ public class TheInternetPage {
     
     public String getContextDynamicControlsDescriptionText(){
     	return visible(text).getText();
+    }
+    
+    public String getContextDynamicLoadingDescriptionText() {
+    	 return visible(contentDynamicParagraphLoading).getText();
+    }
+    
+    public String getContextDynamicLoadingDescriptionTextFinish() {
+    	 return visible(contentDynamicParagraphLoading1).getText();
+    }
+    
+    public String getContextDynamicLoadingTitle() {
+    	 return visible(contentDynamicTitle).getText();
     }
     
 
@@ -290,6 +333,17 @@ public class TheInternetPage {
             Thread.currentThread().interrupt();
             throw new RuntimeException("A execução foi interrompida durante a pausa.", e);
         }
+    }
+    
+    
+    public void navigateBack(String expectedUrl) {
+    	
+    	  if(expectedUrl == null || expectedUrl.trim().isEmpty()) {
+    		  throw new 	IllegalArgumentException("expectedUrl não pode ser nulo ou vazio.");
+    	  }
+    	  
+    	  driver.navigate().back();
+    	  waitForUrl(expectedUrl);
     }
 
     public String getColumnAHeaderText() {

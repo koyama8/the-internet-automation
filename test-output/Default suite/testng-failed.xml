@@ -6,8 +6,8 @@
       <class name="com.koyama.tests.BasicElementsTests">
         <methods>
           <include name="initPage"/>
+          <include name="contentDynamicLoading"/>
           <include name="setUp"/>
-          <include name="contentDynamicSelectControls"/>
           <include name="tearDown"/>
         </methods>
       </class> <!-- com.koyama.tests.BasicElementsTests -->
