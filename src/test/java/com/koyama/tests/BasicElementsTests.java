@@ -14,7 +14,7 @@ public class BasicElementsTests extends BaseTest {
 
     private TheInternetPage page;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void initPage() {
         page = new TheInternetPage(driver, wait);
     }
@@ -22,13 +22,13 @@ public class BasicElementsTests extends BaseTest {
     @Test
     public void shouldOpenABTestingPageAndDisplayParagraph() {
         page.openHomePage();
-        page.goToABTesting();
+        page.goToAbTesting();
 
         String paragraphText = page.getABTestingParagraphText();
 
         Assert.assertTrue(
-            paragraphText.contains(""),
-            "O parágrafo da página A/B Testing não contém o texto esperado."
+            paragraphText.contains("split testing"),
+            "The A/B Testing page should describe split testing."
         );
     }
 
@@ -42,19 +42,24 @@ public class BasicElementsTests extends BaseTest {
         Assert.assertEquals(
             page.getDeleteButtonsCount(),
             5,
-            "A quantidade de botões Delete deveria ser 5."
+            "The Delete button count should be 5."
         );
     }
 
     @Test
-    public void shouldOpenBrokenImagesPageSuccessfully() {
+    public void shouldOpenBrokenImagesPageAndDetectBrokenImages() {
         page.openHomePage();
         page.goToBrokenImages();
 
         Assert.assertEquals(
             page.getBrokenImagesTitleText(),
             "Broken Images",
-            "O título da página Broken Images está incorreto."
+            "The Broken Images page title is incorrect."
+        );
+
+        Assert.assertTrue(
+            page.countBrokenImages() > 0,
+            "The scenario should contain at least one broken image."
         );
     }
 
@@ -68,7 +73,7 @@ public class BasicElementsTests extends BaseTest {
 
         Assert.assertTrue(
             paragraphText.contains("The hardest part in automated web testing"),
-            "O texto principal da página Challenging DOM não foi encontrado."
+            "The Challenging DOM main paragraph was not displayed as expected."
         );
     }
 
@@ -81,70 +86,113 @@ public class BasicElementsTests extends BaseTest {
 
         Assert.assertTrue(
             page.areAllCheckboxesSelected(),
-            "Nem todos os checkboxes ficaram marcados."
+            "All checkboxes should remain selected."
         );
     }
 
     @Test
-    public void shouldOpenContextMenuPageSuccessfully() {
+    public void shouldOpenContextMenuPageAndDisplayAlert() {
         page.openHomePage();
         page.goToContextMenu();
 
         Assert.assertEquals(
             page.getContextMenuDescriptionText(),
             "Context menu items are custom additions that appear in the right-click menu.",
-            "O texto descritivo da página Context Menu está incorreto."
+            "The Context Menu description text is incorrect."
+        );
+
+        page.rightClickContextMenuBox();
+
+        Assert.assertEquals(
+            page.getContextMenuAlertText(),
+            "You selected a context menu",
+            "The expected context menu alert was not displayed."
+        );
+
+        page.acceptContextMenuAlert();
+    }
+
+    @Test
+    public void shouldDisplayDynamicContentDescription() {
+        page.openHomePage();
+        page.goToDynamicContent();
+
+        Assert.assertTrue(
+            page.getDynamicContentDescriptionText().contains("ever-evolving nature of content"),
+            "The Dynamic Content page description should explain the page behaviour."
         );
     }
-    
+
     @Test
-    public void contentDynamicParagraph() {
-    	page.openHomePage();
-    	page.goToContextDynamic();
-    	
-    	Assert.assertEquals(page.getContextDynamicDescriptionText(),
-         "This example demonstrates the ever-evolving nature of content by loading new text and images on each page refresh.");
+    public void shouldRemoveCheckboxAndEnableInputSuccessfully() {
+        page.openHomePage();
+        page.goToDynamicControls();
+
+        page.removeCheckbox();
+        Assert.assertEquals(
+            page.getDynamicControlsMessageText(),
+            "It's gone!",
+            "The checkbox removal message is incorrect."
+        );
+
+        page.enableInputField();
+        Assert.assertEquals(
+            page.getDynamicControlsMessageText(),
+            "It's enabled!",
+            "The input enable message is incorrect."
+        );
     }
-    
-    
+
     @Test
-    public void contentDynamicSelectControls( ) {
-    	page.openHomePage();
-    	page.goToContextDynamicControls();
-    	
-    	page.selectButton();
-    	Assert.assertEquals(page.getContextDynamicControlsDescriptionText(), "It's enabled!");
-    	
+    public void shouldLoadDynamicContentExamplesSuccessfully() {
+        page.openHomePage();
+        page.goToDynamicLoading();
+
+        Assert.assertEquals(
+            page.getDynamicLoadingTitleText(),
+            "Dynamically Loaded Page Elements",
+            "The Dynamic Loading page title is incorrect."
+        );
+
+        Assert.assertTrue(
+            page.getDynamicLoadingDescriptionText().contains("returns a result dynamically"),
+            "The Dynamic Loading page description should explain the dynamic behaviour."
+        );
+
+        page.openDynamicLoadingExample1();
+        page.startDynamicLoadingExample();
+        Assert.assertEquals(
+            page.getDynamicLoadingFinishText(),
+            "Hello World!",
+            "Example 1 should display the final loaded text."
+        );
+
+        page.navigateBack("/dynamic_loading");
+
+        page.openDynamicLoadingExample2();
+        page.startDynamicLoadingExample();
+        Assert.assertEquals(
+            page.getDynamicLoadingFinishText(),
+            "Hello World!",
+            "Example 2 should display the final loaded text."
+        );
     }
-    
+
     @Test
-    public void contentDynamicLoading( ) {
-    	 page.openHomePage();
-    	 page.gotToContextDynamicLoading();
-    	 
-    	 Assert.assertEquals(page.getContextDynamicLoadingDescriptionText(), 
-     "It's common to see an action get triggered that returns a result dynamically. It does not rely on the page to reload or finish loading. The page automatically gets updated (e.g. hiding elements, showing elements, updating copy, etc) through the use of JavaScript.");
-    	 
-    	 page.selectLinkElementExample1();
-    	 Assert.assertEquals(page.getContextDynamicLoadingDescriptionTextFinish(), "Hello World!");
-    	 
-    	 page.navigateBack("");
-    	 
-    	 page.selectLinkElementExample2();
-    	 Assert.assertEquals(page.getContextDynamicLoadingTitle(), "Dynamically Loaded Page Elements");
-    }
-    
-    @Test
-    public void shouldSelectDropdown() {
-    	page.openHomePage();
-    	page.gotoDropdown();
-    	
-    	String[] options = {"Option 1","Option 2"};
-    	
-    	for (String option : options) {
-			
-    		page.selectDropdownOptionByText(option);
-		}    	
+    public void shouldSelectDropdownOptionsSuccessfully() {
+        page.openHomePage();
+        page.goToDropdown();
+
+        String[] options = {"Option 1", "Option 2"};
+
+        for (String option : options) {
+            page.selectDropdownOptionByText(option);
+            Assert.assertEquals(
+                page.getSelectedDropdownOptionText(),
+                option,
+                "The selected dropdown option does not match the expected value."
+            );
+        }
     }
 
     @Test
@@ -153,13 +201,13 @@ public class BasicElementsTests extends BaseTest {
         page.goToDisappearingElements();
         page.clickHomeAndReturnToDisappearingElements();
 
-        page.openLinkAndReturn("About", "/about/");
-        page.openLinkAndReturn("Contact Us", "/contact-us/");
-        page.openLinkAndReturn("Portfolio", "/portfolio/");
+        page.openLinkFromDisappearingElementsAndReturn("About", "/about/");
+        page.openLinkFromDisappearingElementsAndReturn("Contact Us", "/contact-us/");
+        page.openLinkFromDisappearingElementsAndReturn("Portfolio", "/portfolio/");
 
         Assert.assertTrue(
             page.isOnDisappearingElementsPage(),
-            "O teste deveria terminar na página Disappearing Elements."
+            "The flow should end on the Disappearing Elements page."
         );
     }
 
@@ -169,8 +217,16 @@ public class BasicElementsTests extends BaseTest {
         page.goToDragAndDrop();
         page.dragColumnAToColumnB();
 
-        Assert.assertEquals(page.getColumnAHeaderText(),"B","A coluna A deveria conter o header B após o drag and drop.");
+        Assert.assertEquals(
+            page.getColumnAHeaderText(),
+            "B",
+            "Column A should display header B after drag and drop."
+        );
 
-        Assert.assertEquals(page.getColumnBHeaderText(),"A","A coluna B deveria conter o header A após o drag and drop.");
+        Assert.assertEquals(
+            page.getColumnBHeaderText(),
+            "A",
+            "Column B should display header A after drag and drop."
+        );
     }
 }

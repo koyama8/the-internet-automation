@@ -2,22 +2,27 @@ package com.koyama.pages;
 
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TheInternetPage {
+
+    private static final String BASE_URL = "https://the-internet.herokuapp.com/";
+    private static final long SHORT_VISUAL_PAUSE_MS = 1_500;
+    private static final long DEFAULT_VISUAL_PAUSE_MS = 2_000;
+    private static final long LONG_VISUAL_PAUSE_MS = 3_000;
 
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final String baseUrl = "https://the-internet.herokuapp.com/";
-
-    // Home / links principais
+    // Home
     private final By abTestingLink = By.linkText("A/B Testing");
     private final By addRemoveElementsLink = By.linkText("Add/Remove Elements");
     private final By brokenImagesLink = By.linkText("Broken Images");
@@ -26,44 +31,54 @@ public class TheInternetPage {
     private final By contextMenuLink = By.linkText("Context Menu");
     private final By disappearingElementsLink = By.linkText("Disappearing Elements");
     private final By dragAndDropLink = By.linkText("Drag and Drop");
+    private final By dropdownLink = By.linkText("Dropdown");
     private final By dynamicContentLink = By.linkText("Dynamic Content");
-    private final By dropdown = By.linkText("Dropdown");
-    private final By dynamicControls = By.linkText("Dynamic Controls");
-    private final By dynamicLoading = By.linkText("Dynamic Loading");
-
+    private final By dynamicControlsLink = By.linkText("Dynamic Controls");
+    private final By dynamicLoadingLink = By.linkText("Dynamic Loading");
 
     // A/B Testing
-    private final By abTestingParagraph = By.xpath("//div[@id='content']//div[@class='example']/p");
-    
-    private final By btn = By.xpath("//form[@id='checkbox-example']//button[@onclick='swapCheckbox()']");
-    private final By btnEnable =  By.xpath("//form[@id='input-example']//button[@onclick='swapInput()']");
-    private final By text = By.xpath("//p[@id='message']");
-    
+    private final By abTestingParagraph = By.cssSelector("#content .example p");
 
     // Add/Remove Elements
     private final By addElementButton = By.cssSelector("button[onclick='addElement()']");
     private final By deleteButtons = By.cssSelector("#elements button");
 
     // Broken Images
-    private final By brokenImagesTitle = By.xpath("//div[@id='content']//div[@class='example']/h3");
+    private final By brokenImagesTitle = By.cssSelector("#content .example h3");
+    private final By brokenImages = By.cssSelector(".example img");
 
     // Challenging DOM
     private final By quxButton = By.cssSelector("a.button.success");
-    private final By challengingDomParagraph = By.cssSelector("p");
+    private final By challengingDomParagraph = By.cssSelector(".example p");
 
     // Checkboxes
     private final By checkboxesInput = By.cssSelector("#checkboxes input[type='checkbox']");
 
     // Context Menu
-    private final By contextMenuParagraph = By.cssSelector("#content p:nth-of-type(1)");
+    private final By contextMenuDescription = By.cssSelector("#content p:nth-of-type(1)");
+    private final By contextMenuHotSpot = By.id("hot-spot");
+
+    // Dropdown
+    private final By dropdownSelect = By.id("dropdown");
 
     // Dynamic Content
-    private final By contentDynamicParagraph = By.cssSelector("#content p:nth-of-type(1)");
+    private final By dynamicContentDescription = By.cssSelector("#content p:nth-of-type(1)");
 
-    private final By contentDynamicParagraphLoading = By.cssSelector("#content p:nth-of-type(1)");
-    private final By contentDynamicParagraphLoading1 = By.id("finish");
-    private final By contentDynamicTitle = By.cssSelector("#content h3 ");
-    
+    // Dynamic Controls
+    private final By dynamicControlsToggleCheckboxButton =
+        By.xpath("//form[@id='checkbox-example']//button[@onclick='swapCheckbox()']");
+    private final By dynamicControlsEnableInputButton =
+        By.xpath("//form[@id='input-example']//button[@onclick='swapInput()']");
+    private final By dynamicControlsMessage = By.id("message");
+
+    // Dynamic Loading
+    private final By dynamicLoadingDescription = By.cssSelector("#content p");
+    private final By dynamicLoadingTitle = By.cssSelector("#content h3");
+    private final By dynamicLoadingExample1Link = By.cssSelector("#content a[href='/dynamic_loading/1']");
+    private final By dynamicLoadingExample2Link = By.cssSelector("#content a[href='/dynamic_loading/2']");
+    private final By dynamicLoadingStartButton = By.cssSelector("#start button");
+    private final By dynamicLoadingFinishText = By.id("finish");
+
     // Disappearing Elements
     private final By homeLink = By.cssSelector("a[href='/']");
 
@@ -72,16 +87,6 @@ public class TheInternetPage {
     private final By columnB = By.id("column-b");
     private final By headerA = By.cssSelector("#column-a header");
     private final By headerB = By.cssSelector("#column-b header");
-    
-    //Dropdown
-    private final By columnDropdown = By.id("dropdown");
-    
-    // Dynamically Loaded
-    private final By example1 = By.cssSelector("#content a[href='/dynamic_loading/1'");
-    private final By buttonExample1 = By.cssSelector("#start button");
-    private final By buttonExample2 = By.cssSelector("#content a[href='/dynamic_loading/2'");
-    
-    
 
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -105,11 +110,11 @@ public class TheInternetPage {
     }
 
     public void openHomePage() {
-        driver.get(baseUrl);
+        driver.get(BASE_URL);
     }
 
     // A/B Testing
-    public void goToABTesting() {
+    public void goToAbTesting() {
         click(abTestingLink);
         waitForUrl("/abtest");
     }
@@ -125,7 +130,7 @@ public class TheInternetPage {
     }
 
     public void addElements(int amount) {
-        for (int i = 0; i < amount; i++) {
+        for (int index = 0; index < amount; index++) {
             click(addElementButton);
         }
     }
@@ -144,6 +149,25 @@ public class TheInternetPage {
         return visible(brokenImagesTitle).getText();
     }
 
+    public int countBrokenImages() {
+        List<WebElement> images = visibleAll(brokenImages);
+        JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
+        int brokenImagesCount = 0;
+
+        for (WebElement image : images) {
+            Number naturalWidth = (Number) javascriptExecutor.executeScript(
+                "return arguments[0].naturalWidth;",
+                image
+            );
+
+            if (naturalWidth == null || naturalWidth.intValue() == 0) {
+                brokenImagesCount++;
+            }
+        }
+
+        return brokenImagesCount;
+    }
+
     // Challenging DOM
     public void goToChallengingDom() {
         click(challengingDomLink);
@@ -151,7 +175,7 @@ public class TheInternetPage {
     }
 
     public void clickQuxButtonMultipleTimes(int amount) {
-        for (int i = 0; i < amount; i++) {
+        for (int index = 0; index < amount; index++) {
             click(quxButton);
         }
     }
@@ -164,7 +188,7 @@ public class TheInternetPage {
     public void goToCheckboxes() {
         click(checkboxesLink);
         waitForUrl("/checkboxes");
-        pause(3000);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void selectAllCheckboxes() {
@@ -188,100 +212,133 @@ public class TheInternetPage {
 
         return true;
     }
-    
-    
-    public void selectDropdownOptionByText(String optionText) {
-        Select select = new Select(visible(columnDropdown));
-        select.selectByVisibleText(optionText);
-        pause(3000);
- 	
-    }
-    
-    public void selectButton() {
-
-    	int  n = 1;
-    	for (int i = 0; i <= n; i++) {
-			wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
-			pause(3000);
-		}
-    	
-    	wait.until(ExpectedConditions.elementToBeClickable(btnEnable)).click();
-    	pause(3000);
-    	
-            	  	   	
-    }
-    
-    public void selectLinkElementExample1() {
-    	
-    	 wait.until(ExpectedConditions.elementToBeClickable(example1)).click();
-    	 wait.until(ExpectedConditions.elementToBeClickable(buttonExample1)).click();
-    	 pause(3000); 	 
-    }
-    
-    public void selectLinkElementExample2() {
-    	   
-     wait.until(ExpectedConditions.elementToBeClickable(buttonExample2)).click();
-     pause(3000);
-    }
-   
-    
 
     // Context Menu
     public void goToContextMenu() {
         click(contextMenuLink);
         waitForUrl("/context_menu");
     }
-    
-    //Dropdown 
-    public void gotoDropdown() {
-    	click(dropdown);
-    	waitForUrl("/dropdown");
-    	pause(3000);
-    }
-    
-    // Dynamic Content
-    public void goToContextDynamic() {
-    	click(dynamicContentLink);
-    	waitForUrl("/dynamic_content");
-    	pause(2000);
-    }
-    
-    public void goToContextDynamicControls() {
-    	click(dynamicControls);
-    	waitForUrl("/dynamic_controls");
-        pause(2000);
+
+    public String getContextMenuDescriptionText() {
+        return visible(contextMenuDescription).getText();
     }
 
-    public void gotToContextDynamicLoading() {
-    	click(dynamicLoading);
-    	waitForUrl("/dynamic_loading");
-    	pause(2000);
+    public void rightClickContextMenuBox() {
+        WebElement hotSpot = visible(contextMenuHotSpot);
+        Actions actions = new Actions(driver);
+
+        actions.contextClick(hotSpot).perform();
+        visualPause(SHORT_VISUAL_PAUSE_MS);
     }
-    
-    public String getContextMenuDescriptionText() {
-        return visible(contextMenuParagraph).getText();
+
+    public String getContextMenuAlertText() {
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        return alert.getText();
     }
-    
-    public String getContextDynamicDescriptionText() {
-    	return visible(contentDynamicParagraph).getText();
+
+    public void acceptContextMenuAlert() {
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.accept();
     }
-    
-    public String getContextDynamicControlsDescriptionText(){
-    	return visible(text).getText();
+
+    // Dropdown
+    public void goToDropdown() {
+        click(dropdownLink);
+        waitForUrl("/dropdown");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public String getContextDynamicLoadingDescriptionText() {
-    	 return visible(contentDynamicParagraphLoading).getText();
+
+    public void selectDropdownOptionByText(String optionText) {
+        Select select = new Select(visible(dropdownSelect));
+        select.selectByVisibleText(optionText);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public String getContextDynamicLoadingDescriptionTextFinish() {
-    	 return visible(contentDynamicParagraphLoading1).getText();
+
+    public String getSelectedDropdownOptionText() {
+        Select select = new Select(visible(dropdownSelect));
+        return select.getFirstSelectedOption().getText();
     }
-    
-    public String getContextDynamicLoadingTitle() {
-    	 return visible(contentDynamicTitle).getText();
+
+    // Dynamic Content
+    public void goToDynamicContent() {
+        click(dynamicContentLink);
+        waitForUrl("/dynamic_content");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
+
+    public String getDynamicContentDescriptionText() {
+        return visible(dynamicContentDescription).getText();
+    }
+
+    // Dynamic Controls
+    public void goToDynamicControls() {
+        click(dynamicControlsLink);
+        waitForUrl("/dynamic_controls");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public void removeCheckbox() {
+        click(dynamicControlsToggleCheckboxButton);
+        wait.until(ExpectedConditions.textToBe(dynamicControlsMessage, "It's gone!"));
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public void enableInputField() {
+        click(dynamicControlsEnableInputButton);
+        wait.until(ExpectedConditions.textToBe(dynamicControlsMessage, "It's enabled!"));
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public String getDynamicControlsMessageText() {
+        return visible(dynamicControlsMessage).getText();
+    }
+
+    // Dynamic Loading
+    public void goToDynamicLoading() {
+        click(dynamicLoadingLink);
+        waitForUrl("/dynamic_loading");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public String getDynamicLoadingDescriptionText() {
+        return visible(dynamicLoadingDescription).getText();
+    }
+
+    public String getDynamicLoadingTitleText() {
+        return visible(dynamicLoadingTitle).getText();
+    }
+
+    public void openDynamicLoadingExample1() {
+        click(dynamicLoadingExample1Link);
+        waitForUrl("/dynamic_loading/1");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public void openDynamicLoadingExample2() {
+        click(dynamicLoadingExample2Link);
+        waitForUrl("/dynamic_loading/2");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public void startDynamicLoadingExample() {
+        click(dynamicLoadingStartButton);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(dynamicLoadingFinishText));
+        visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
+    public String getDynamicLoadingFinishText() {
+        return visible(dynamicLoadingFinishText).getText();
+    }
+
+    public void navigateBack(String expectedUrlPart) {
+        if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
+            throw new IllegalArgumentException("expectedUrlPart cannot be null or blank.");
+        }
+
+        driver.navigate().back();
+        waitForUrl(expectedUrlPart);
+        visualPause(SHORT_VISUAL_PAUSE_MS);
+    }
 
     // Disappearing Elements
     public void goToDisappearingElements() {
@@ -294,10 +351,10 @@ public class TheInternetPage {
         goToDisappearingElements();
     }
 
-    public void openLinkAndReturn(String menuText, String expectedUrlPart) {
-        By dynamicLink = By.linkText(menuText);
+    public void openLinkFromDisappearingElementsAndReturn(String menuText, String expectedUrlPart) {
+        By menuLink = By.linkText(menuText);
 
-        click(dynamicLink);
+        click(menuLink);
         waitForUrl(expectedUrlPart);
 
         driver.navigate().back();
@@ -324,27 +381,6 @@ public class TheInternetPage {
         wait.until(ExpectedConditions.textToBe(headerA, "B"));
         wait.until(ExpectedConditions.textToBe(headerB, "A"));
     }
-    
-    
-    private void pause(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("A execução foi interrompida durante a pausa.", e);
-        }
-    }
-    
-    
-    public void navigateBack(String expectedUrl) {
-    	
-    	  if(expectedUrl == null || expectedUrl.trim().isEmpty()) {
-    		  throw new 	IllegalArgumentException("expectedUrl não pode ser nulo ou vazio.");
-    	  }
-    	  
-    	  driver.navigate().back();
-    	  waitForUrl(expectedUrl);
-    }
 
     public String getColumnAHeaderText() {
         return visible(headerA).getText();
@@ -352,5 +388,15 @@ public class TheInternetPage {
 
     public String getColumnBHeaderText() {
         return visible(headerB).getText();
+    }
+
+    // Intentional pause for study mode so the user can visually follow the execution.
+    private void visualPause(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Execution was interrupted during the visual pause.", exception);
+        }
     }
 }
