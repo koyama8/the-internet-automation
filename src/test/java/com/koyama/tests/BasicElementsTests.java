@@ -177,6 +177,33 @@ public class BasicElementsTests extends BaseTest {
             "Example 2 should display the final loaded text."
         );
     }
+    
+    @Test
+    public void shouldEntryAdSuccessfully() {
+    	   page.openHomePage();
+    	   page.goToEntryAd();
+    	   
+    	   Assert.assertEquals(page.getEntryTextButton(), 
+    			   "Close");
+    	   Assert.assertEquals(page.getEntryText(), 
+    			   "It's commonly used to encourage a user to take an action "
+    			   + "(e.g., give their e-mail address to sign up for something or disable their ad blocker).");
+    	   page.selectCloseLink();   	
+    	   
+    	   Assert.assertEquals(page.getEntryTextAd(), 
+    			   "If closed, it will not appear on subsequent page loads.");    	       	   
+    }
+    
+
+    @Test
+    public void shouldSelectAllDowload() {
+    	  page.openHomePage();
+    	  page.goToFileDowload();
+    	  
+    	  page.selectFilePDF();  
+    }
+    
+    
 
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {

@@ -35,6 +35,9 @@ public class TheInternetPage {
     private final By dynamicContentLink = By.linkText("Dynamic Content");
     private final By dynamicControlsLink = By.linkText("Dynamic Controls");
     private final By dynamicLoadingLink = By.linkText("Dynamic Loading");
+    private final By entryAd = By.linkText("Entry Ad");
+    private final By fileDownload = By.linkText("File Download");
+    
 
     // Button selectors
     private final By addElementButton = By.cssSelector("button[onclick='addElement()']");
@@ -57,6 +60,8 @@ public class TheInternetPage {
     private final By headerA = By.cssSelector("#column-a header");
     private final By headerB = By.cssSelector("#column-b header");
     private final By homeLink = By.cssSelector("a[href='/']");
+    private final By closeTextButton = By.cssSelector(".modal-footer p");
+    private final By closeText = By.cssSelector(".modal-body p");
 
     // ID selectors
     private final By columnA = By.id("column-a");
@@ -71,7 +76,18 @@ public class TheInternetPage {
         By.xpath("//form[@id='input-example']//button[@onclick='swapInput()']");
     private final By dynamicControlsToggleCheckboxButton =
         By.xpath("//form[@id='checkbox-example']//button[@onclick='swapCheckbox()']");
+    private final By entryadlButton = 
+    		By.xpath("//div[@class='modal-footer']//p[normalize-space()='Close']");
+    private final By entryText = 
+    		By.xpath("//div[@class='example']//p[normalize-space()='If closed, it will not appear on subsequent page loads.']");
+    private final By fileDowloadPDF =
+    		By.xpath("//a[contains(@href,'p_compress.pdf')]");
+    private final By gestionDePruebasDocxLink  =
+    		By.xpath("//div[@class='example']//a[normalize-space()='Gestion de pruebas.docx']");
+    private final By tmpTXT =
+    		By.xpath("//div[@class='example']//a[normalize-space()='tmp0060drcz.txt']");
 
+    
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -197,6 +213,18 @@ public class TheInternetPage {
         waitForUrl("/dynamic_loading");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
+    
+    public void goToEntryAd() {
+    	   click(entryAd);
+    	   waitForUrl("/entry_ad");
+    	   visualPause(SHORT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToFileDowload() {
+    	   click(fileDownload);
+    	   waitForUrl("/download");
+    	   visualPause(SHORT_VISUAL_PAUSE_MS);
+    }
 
     public void navigateBack(String expectedUrlPart) {
         if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
@@ -268,6 +296,18 @@ public class TheInternetPage {
         click(dynamicLoadingStartButton);
         wait.until(ExpectedConditions.visibilityOfElementLocated(dynamicLoadingFinishText));
         visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectCloseLink() {
+    	  click(entryadlButton);
+    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectFilePDF() {
+    	  click(fileDowloadPDF);
+    	  click(gestionDePruebasDocxLink );
+    	  click(tmpTXT);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
     // Read and validation methods
@@ -359,6 +399,19 @@ public class TheInternetPage {
         Select select = new Select(visible(dropdownSelect));
         return select.getFirstSelectedOption().getText();
     }
+    
+    public String getEntryTextButton() {
+    	   return visible(closeTextButton).getText();
+    }
+    
+    public String  getEntryText() {
+    	 return visible(closeText).getText();
+    }
+    
+    public String getEntryTextAd() {
+    	  return visible(entryText).getText();
+    }
+
 
     public boolean isOnDisappearingElementsPage() {
         return driver.getCurrentUrl().contains("/disappearing_elements");
