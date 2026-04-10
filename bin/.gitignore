@@ -1,0 +1,24 @@
+# Build
+target/
+test-output/
+
+# Allure
+allure-report/
+allure-results/
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# Logs
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Drivers locais
+drivers/*.exe
+drivers/*.zip
+drivers/*.msi
