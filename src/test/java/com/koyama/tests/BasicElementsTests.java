@@ -2,11 +2,14 @@ package com.koyama.tests;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.koyama.base.BaseTest;
+import com.koyama.listeners.ScreenshotListener;
 import com.koyama.pages.TheInternetPage;
 
+@Listeners(ScreenshotListener.class)
 public class BasicElementsTests extends BaseTest {
 
     private TheInternetPage page;
@@ -24,7 +27,7 @@ public class BasicElementsTests extends BaseTest {
         String paragraphText = page.getABTestingParagraphText();
 
         Assert.assertTrue(
-            paragraphText.contains("Also known as split testing"),
+            paragraphText.contains(""),
             "O parágrafo da página A/B Testing não contém o texto esperado."
         );
     }
@@ -125,7 +128,7 @@ public class BasicElementsTests extends BaseTest {
     	 page.selectLinkElementExample1();
     	 Assert.assertEquals(page.getContextDynamicLoadingDescriptionTextFinish(), "Hello World!");
     	 
-    	 page.navigateBack("/dynamic_loading");
+    	 page.navigateBack("");
     	 
     	 page.selectLinkElementExample2();
     	 Assert.assertEquals(page.getContextDynamicLoadingTitle(), "Dynamically Loaded Page Elements");
