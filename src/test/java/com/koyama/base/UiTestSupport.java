@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
-public class BaseTest {
+public class UiTestSupport {
 
     protected static final Duration DEFAULT_EXPLICIT_WAIT = Duration.ofSeconds(10);
 

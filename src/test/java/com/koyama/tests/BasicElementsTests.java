@@ -5,12 +5,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import com.koyama.base.BaseTest;
+import com.koyama.base.UiTestSupport;
 import com.koyama.listeners.ScreenshotListener;
 import com.koyama.pages.TheInternetPage;
 
 @Listeners(ScreenshotListener.class)
-public class BasicElementsTests extends BaseTest {
+public class BasicElementsTests extends UiTestSupport {
 
     private TheInternetPage page;
 

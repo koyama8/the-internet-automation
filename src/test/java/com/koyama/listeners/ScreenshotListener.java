@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import com.koyama.base.BaseTest;
+import com.koyama.base.UiTestSupport;
 
 import io.qameta.allure.Allure;
 
@@ -18,8 +18,8 @@ public class ScreenshotListener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         Object currentClass = result.getInstance();
 
-        if (currentClass instanceof BaseTest) {
-            BaseTest baseTest = (BaseTest) currentClass;
+        if (currentClass instanceof UiTestSupport) {
+        	UiTestSupport baseTest = (UiTestSupport) currentClass;
             WebDriver driver = baseTest.getDriver();
 
             if (driver != null) {

@@ -118,6 +118,7 @@ public class TheInternetPage {
     public void addElements(int amount) {
         for (int index = 0; index < amount; index++) {
             click(addElementButton);
+            visualPause(SHORT_VISUAL_PAUSE_MS);
         }
     }
 
