@@ -203,6 +203,13 @@ public class BasicElementsTests extends UiTestSupport {
     	  page.selectFilePDF();  
     }
     
+    @Test
+    public void shoudSelectFloatMenu() {
+    	  page.openHomePage();
+    	  page.gotoMenuFloat();
+    	  
+    	  page.selectMenuFloat();
+    }
     
 
     @Test

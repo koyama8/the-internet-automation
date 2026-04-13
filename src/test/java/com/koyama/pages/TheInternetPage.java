@@ -37,6 +37,7 @@ public class TheInternetPage {
     private final By dynamicLoadingLink = By.linkText("Dynamic Loading");
     private final By entryAd = By.linkText("Entry Ad");
     private final By fileDownload = By.linkText("File Download");
+    private final By floatMenu = By.linkText("Floating Menu");
     
 
     // Button selectors
@@ -62,6 +63,11 @@ public class TheInternetPage {
     private final By homeLink = By.cssSelector("a[href='/']");
     private final By closeTextButton = By.cssSelector(".modal-footer p");
     private final By closeText = By.cssSelector(".modal-body p");
+    private final By floatMenualLink = By.cssSelector("#content a[href='#home'] ");
+    private final By floatMenuLink2 = By.xpath("//div[@class='example']//a[normalize-space()='News']");
+    private final By floatMenulink3 = By.cssSelector("#content a[href='#contact'");
+    private final By floatMenulink4 = By.xpath("//div[@class='example']//a[normalize-space()='About']");
+    
 
     // ID selectors
     private final By columnA = By.id("column-a");
@@ -226,6 +232,12 @@ public class TheInternetPage {
     	   waitForUrl("/download");
     	   visualPause(SHORT_VISUAL_PAUSE_MS);
     }
+    
+    public void gotoMenuFloat() {
+    	  click(floatMenu);
+    	  waitForUrl("/floating_menu");
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
 
     public void navigateBack(String expectedUrlPart) {
         if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
@@ -309,6 +321,18 @@ public class TheInternetPage {
     	  click(gestionDePruebasDocxLink );
     	  click(tmpTXT);
     	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectMenuFloat() {
+    	  click(floatMenualLink);
+    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+    	  click(floatMenuLink2);
+    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+    	  click(floatMenulink3);
+    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+    	  click(floatMenulink4);
+    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+
     }
 
     // Read and validation methods
