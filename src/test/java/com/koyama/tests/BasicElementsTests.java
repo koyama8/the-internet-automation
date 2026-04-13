@@ -211,7 +211,16 @@ public class BasicElementsTests extends UiTestSupport {
     	  page.selectMenuFloat();
     }
     
+    @Test
+    public void selectPasswordForgot() {
+    	  page.openHomePage();
+    	  page.gotoPassword();
+    	  
+    	  page.writePassword("senium@teste.com.br");
+    	  page.selectButton();
 
+    }
+    
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {
         page.openHomePage();

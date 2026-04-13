@@ -38,6 +38,8 @@ public class TheInternetPage {
     private final By entryAd = By.linkText("Entry Ad");
     private final By fileDownload = By.linkText("File Download");
     private final By floatMenu = By.linkText("Floating Menu");
+    private final By passwordLink = By.linkText("Forgot Password");
+    
     
 
     // Button selectors
@@ -76,6 +78,7 @@ public class TheInternetPage {
     private final By dropdownSelect = By.id("dropdown");
     private final By dynamicControlsMessage = By.id("message");
     private final By dynamicLoadingFinishText = By.id("finish");
+    private final By forgotPasswordEmailInput= By.id("email");
 
     // XPath selectors
     private final By dynamicControlsEnableInputButton =
@@ -92,7 +95,8 @@ public class TheInternetPage {
     		By.xpath("//div[@class='example']//a[normalize-space()='Gestion de pruebas.docx']");
     private final By tmpTXT =
     		By.xpath("//div[@class='example']//a[normalize-space()='tmp0060drcz.txt']");
-
+    private final By buttonPassword = 
+    		By.xpath("//form[@id='forgot_password']//button[@type='submit']");
     
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -238,6 +242,12 @@ public class TheInternetPage {
     	  waitForUrl("/floating_menu");
     	  visualPause(LONG_VISUAL_PAUSE_MS);
     }
+    
+    public void gotoPassword() {
+    	  click(passwordLink);
+    	  waitForUrl("/forgot_password");
+    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+    }
 
     public void navigateBack(String expectedUrlPart) {
         if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
@@ -323,6 +333,11 @@ public class TheInternetPage {
     	  visualPause(LONG_VISUAL_PAUSE_MS);
     }
     
+    public void selectButton() {
+    	  click(buttonPassword);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
     public void selectMenuFloat() {
     	  click(floatMenualLink);
     	  visualPause(SHORT_VISUAL_PAUSE_MS);
@@ -333,6 +348,13 @@ public class TheInternetPage {
     	  click(floatMenulink4);
     	  visualPause(SHORT_VISUAL_PAUSE_MS);
 
+    }
+    
+    public void writePassword(String email) {
+    	  WebElement input = visible(forgotPasswordEmailInput);
+    	  input.clear();
+    	  input.sendKeys(email);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
     // Read and validation methods
