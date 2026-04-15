@@ -23,7 +23,10 @@ public class TheInternetPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Link selectors
+    /**
+     * Seletores por link de texto.
+     * Usados para navegar da home para as paginas principais do site.
+     */
     private final By abTestingLink = By.linkText("A/B Testing");
     private final By addRemoveElementsLink = By.linkText("Add/Remove Elements");
     private final By brokenImagesLink = By.linkText("Broken Images");
@@ -43,15 +46,16 @@ public class TheInternetPage {
     private final By formAuthenticationLink = By.linkText("Form Authentication");
     private final By framesLink = By.linkText("Frames");
 
-    // Button selectors
+    /**
+     * Seletores CSS.
+     * Aqui ficam botoes, textos, links internos, listas e elementos visuais da tela.
+     */
     private final By addElementButton = By.cssSelector("button[onclick='addElement()']");
     private final By deleteButtons = By.cssSelector("#elements button");
     private final By dynamicLoadingStartButton = By.cssSelector("#start button");
     private final By quxButton = By.cssSelector("a.button.success");
     private final By forgotPasswordSubmitButton = By.cssSelector("#forgot_password button[type='submit']");
     private final By loginSubmitButton = By.cssSelector("#login button[type='submit']");
-
-    // CSS selectors
     private final By abTestingParagraph = By.cssSelector("#content .example p");
     private final By brokenImages = By.cssSelector(".example img");
     private final By brokenImagesTitle = By.cssSelector("#content .example h3");
@@ -76,7 +80,10 @@ public class TheInternetPage {
     private final By downloadLinks = By.cssSelector("#content .example a");
     private final By secureAreaTitle = By.cssSelector("#content h2");
 
-    // ID selectors
+    /**
+     * Seletores por ID.
+     * Aqui ficam elementos mais estaveis da pagina, como campos, mensagens e containers.
+     */
     private final By columnA = By.id("column-a");
     private final By columnB = By.id("column-b");
     private final By contextMenuHotSpot = By.id("hot-spot");
@@ -88,7 +95,17 @@ public class TheInternetPage {
     private final By usernameForm = By.id("username");
     private final By passwordForm = By.id("password");
 
-    // XPath selectors
+    /**
+     * Seletores por name.
+     * Usados principalmente no fluxo de frames.
+     */
+    private final By topFrame = By.name("frame-top");
+    private final By leftFrame = By.name("frame-left");
+
+    /**
+     * Seletores por XPath.
+     * Ficam aqui os casos em que o XPath ajuda mais pela estrutura ou pelo texto do elemento.
+     */
     private final By dynamicControlsEnableInputButton =
         By.xpath("//form[@id='input-example']//button[@onclick='swapInput()']");
     private final By dynamicControlsToggleCheckboxButton =
@@ -100,15 +117,15 @@ public class TheInternetPage {
     private final By leftFrameText =
         By.xpath("//body[normalize-space()='LEFT']");
 
-    // Name selectors
-    private final By topFrame = By.name("frame-top");
-    private final By leftFrame = By.name("frame-left");
-
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
     }
 
+    /**
+     * Metodos utilitarios internos.
+     * Servem para centralizar clique, espera, visibilidade e tratamento simples de texto.
+     */
     private void click(By locator) {
         wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
     }
@@ -129,60 +146,13 @@ public class TheInternetPage {
         return rawText.replace("\u00D7", "").replaceAll("\\s+", " ").trim();
     }
 
-    // Navigation and action methods
-    public void acceptContextMenuAlert() {
-        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        alert.accept();
-    }
-
-    public void addElements(int amount) {
-        for (int index = 0; index < amount; index++) {
-            click(addElementButton);
-            visualPause(SHORT_VISUAL_PAUSE_MS);
-        }
-    }
-
-    public void clickHomeAndReturnToDisappearingElements() {
-        click(homeLink);
-        goToDisappearingElements();
-    }
-
-    public void clickQuxButtonMultipleTimes(int amount) {
-        for (int index = 0; index < amount; index++) {
-            click(quxButton);
-        }
-    }
-
-    public String downloadFirstAvailableFile() {
-        List<WebElement> fileLinks = visibleAll(downloadLinks);
-
-        for (WebElement fileLink : fileLinks) {
-            String fileName = fileLink.getText().trim();
-
-            if (!fileName.isEmpty()) {
-                wait.until(ExpectedConditions.elementToBeClickable(fileLink)).click();
-                return fileName;
-            }
-        }
-
-        throw new IllegalStateException("No downloadable file was available on the page.");
-    }
-
-    public void dragColumnAToColumnB() {
-        WebElement source = visible(columnA);
-        WebElement target = visible(columnB);
-
-        Actions actions = new Actions(driver);
-        actions.dragAndDrop(source, target).perform();
-
-        wait.until(ExpectedConditions.textToBe(headerA, "B"));
-        wait.until(ExpectedConditions.textToBe(headerB, "A"));
-    }
-
-    public void enableInputField() {
-        click(dynamicControlsEnableInputButton);
-        wait.until(ExpectedConditions.textToBe(dynamicControlsMessage, "It's enabled!"));
-        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    /**
+     * Metodos de navegacao.
+     * Este bloco concentra os metodos responsaveis por abrir paginas, acessar links
+     * e controlar a movimentacao entre telas do site.
+     */
+    public void openHomePage() {
+        driver.get(BASE_URL);
     }
 
     public void goToAbTesting() {
@@ -286,16 +256,6 @@ public class TheInternetPage {
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
-    public void navigateBack(String expectedUrlPart) {
-        if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
-            throw new IllegalArgumentException("expectedUrlPart cannot be null or blank.");
-        }
-
-        driver.navigate().back();
-        waitForUrl(expectedUrlPart);
-        visualPause(LONG_VISUAL_PAUSE_MS);
-    }
-
     public void openDynamicLoadingExample1() {
         click(dynamicLoadingExample1Link);
         waitForUrl("/dynamic_loading/1");
@@ -308,10 +268,6 @@ public class TheInternetPage {
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
-    public void openHomePage() {
-        driver.get(BASE_URL);
-    }
-
     public void openLinkFromDisappearingElementsAndReturn(String menuText, String expectedUrlPart) {
         By menuLink = By.linkText(menuText);
 
@@ -320,6 +276,76 @@ public class TheInternetPage {
 
         driver.navigate().back();
         waitForUrl("/disappearing_elements");
+    }
+
+    public void clickHomeAndReturnToDisappearingElements() {
+        click(homeLink);
+        goToDisappearingElements();
+    }
+
+    public void navigateBack(String expectedUrlPart) {
+        if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
+            throw new IllegalArgumentException("expectedUrlPart cannot be null or blank.");
+        }
+
+        driver.navigate().back();
+        waitForUrl(expectedUrlPart);
+        visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
+    /**
+     * Metodos de execucao e interacao.
+     * Este bloco concentra as acoes feitas dentro das telas, como clicar, preencher,
+     * arrastar, selecionar, submeter formularios e interagir com alertas.
+     */
+    public void acceptContextMenuAlert() {
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.accept();
+    }
+
+    public void addElements(int amount) {
+        for (int index = 0; index < amount; index++) {
+            click(addElementButton);
+            visualPause(SHORT_VISUAL_PAUSE_MS);
+        }
+    }
+
+    public void clickQuxButtonMultipleTimes(int amount) {
+        for (int index = 0; index < amount; index++) {
+            click(quxButton);
+        }
+    }
+
+    public String downloadFirstAvailableFile() {
+        List<WebElement> fileLinks = visibleAll(downloadLinks);
+
+        for (WebElement fileLink : fileLinks) {
+            String fileName = fileLink.getText().trim();
+
+            if (!fileName.isEmpty()) {
+                wait.until(ExpectedConditions.elementToBeClickable(fileLink)).click();
+                return fileName;
+            }
+        }
+
+        throw new IllegalStateException("No downloadable file was available on the page.");
+    }
+
+    public void dragColumnAToColumnB() {
+        WebElement source = visible(columnA);
+        WebElement target = visible(columnB);
+
+        Actions actions = new Actions(driver);
+        actions.dragAndDrop(source, target).perform();
+
+        wait.until(ExpectedConditions.textToBe(headerA, "B"));
+        wait.until(ExpectedConditions.textToBe(headerB, "A"));
+    }
+
+    public void enableInputField() {
+        click(dynamicControlsEnableInputButton);
+        wait.until(ExpectedConditions.textToBe(dynamicControlsMessage, "It's enabled!"));
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void removeCheckbox() {
@@ -414,7 +440,10 @@ public class TheInternetPage {
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
-    // Compatibility aliases
+    /**
+     * Aliases de compatibilidade.
+     * Este bloco foi mantido para nao quebrar chamadas antigas do projeto.
+     */
     public void goToFileDowload() {
         goToFileDownload();
     }
@@ -447,7 +476,10 @@ public class TheInternetPage {
         submitLoginForm();
     }
 
-    // Read and validation methods
+    /**
+     * Metodos de leitura e validacao.
+     * Este bloco fica no final porque ele reune os retornos usados nos asserts dos testes.
+     */
     public boolean areAllCheckboxesSelected() {
         List<WebElement> allCheckboxes = driver.findElements(checkboxesInput);
 
@@ -592,9 +624,13 @@ public class TheInternetPage {
         return driver.getCurrentUrl().contains("/disappearing_elements");
     }
 
-    // Intentional pause for study mode so the user can visually follow the execution.
+    /**
+     * Pausa visual para estudo.
+     * Por padrao ela fica ativa para facilitar o acompanhamento da execucao.
+     * Se quiser desativar, rode com -Dstudy.mode=false.
+     */
     private void visualPause(long milliseconds) {
-        if (!Boolean.parseBoolean(System.getProperty("study.mode", "false"))) {
+        if (!Boolean.parseBoolean(System.getProperty("study.mode", "true"))) {
             return;
         }
 

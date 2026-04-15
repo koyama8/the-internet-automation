@@ -21,6 +21,7 @@ public class UiTestSupport {
 
     protected static final Duration DEFAULT_EXPLICIT_WAIT = Duration.ofSeconds(10);
     protected static final Duration DEFAULT_DOWNLOAD_WAIT = Duration.ofSeconds(20);
+    protected static final boolean HEADLESS_ENABLED = Boolean.parseBoolean(System.getProperty("headless", "false"));
 
     protected WebDriver driver;
     protected WebDriverWait wait;
@@ -32,6 +33,11 @@ public class UiTestSupport {
 
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", createChromePreferences());
+        options.addArguments("--disable-notifications");
+
+        if (HEADLESS_ENABLED) {
+            options.addArguments("--headless=new");
+        }
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
