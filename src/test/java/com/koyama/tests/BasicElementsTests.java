@@ -218,7 +218,29 @@ public class BasicElementsTests extends UiTestSupport {
     	  
     	  page.writePassword("senium@teste.com.br");
     	  page.selectButton();
-
+    }
+    
+    @Test
+    public void writePasswordForm() {
+    	  page.openHomePage();
+    	  page.gotoForm();
+    	  
+      page.writeForm("tomsmith");
+      page.writePasswordForm("SuperSecretPassword!");
+      
+      page.selectButtonForm();    	  
+    }
+    
+    @Test
+    public void framesValidation() {
+    	   page.openHomePage();
+    	   page.gotoFrames();
+    	   
+    	   page.selectLinkNested();
+    	   Assert.assertEquals(page.getLeftFrameText(), "LEFT");
+    	   page.navigateBack("/frames");
+    
+    
     }
     
     @Test
