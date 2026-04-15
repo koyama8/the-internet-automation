@@ -39,7 +39,8 @@ public class TheInternetPage {
     private final By fileDownload = By.linkText("File Download");
     private final By floatMenu = By.linkText("Floating Menu");
     private final By passwordLink = By.linkText("Forgot Password");
-    
+    private final By formAuthentication = By.linkText("Form Authentication");    
+    private final By framesLink = By.linkText("Frames");
     
 
     // Button selectors
@@ -68,7 +69,7 @@ public class TheInternetPage {
     private final By floatMenualLink = By.cssSelector("#content a[href='#home'] ");
     private final By floatMenuLink2 = By.xpath("//div[@class='example']//a[normalize-space()='News']");
     private final By floatMenulink3 = By.cssSelector("#content a[href='#contact'");
-    private final By floatMenulink4 = By.xpath("//div[@class='example']//a[normalize-space()='About']");
+    private final By framesLinkNested = By.cssSelector("#content a[href='/nested_frames']");
     
 
     // ID selectors
@@ -97,6 +98,21 @@ public class TheInternetPage {
     		By.xpath("//div[@class='example']//a[normalize-space()='tmp0060drcz.txt']");
     private final By buttonPassword = 
     		By.xpath("//form[@id='forgot_password']//button[@type='submit']");
+    private final By floatMenulink4 = 
+    		By.xpath("//div[@class='example']//a[normalize-space()='About']");
+    private final By usernameForm =
+    		By.xpath("//form[@id='login']//input[@type='text']");
+    private final By passwordFor = 
+    		By.xpath("//form[@id='login']//input[@type='password']");
+    private final By buttonForm =
+    		By.xpath("//form[@id='login']//button[@type='submit']");
+    private final By leftframeText = 
+    		By.xpath("//body[normalize-space()='LEFT']");
+    
+    
+    // Name
+    private final By topframe = By.name("frame-top");
+    private final By leftframe = By.name("frame-left");
     
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -248,6 +264,18 @@ public class TheInternetPage {
     	  waitForUrl("/forgot_password");
     	  visualPause(SHORT_VISUAL_PAUSE_MS);
     }
+    
+    public void gotoForm() {
+    	 click(formAuthentication);
+    	 waitForUrl("/login");
+    	 visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public void gotoFrames() {
+    	  click(framesLink);
+    	  waitForUrl("/frames");
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
 
     public void navigateBack(String expectedUrlPart) {
         if (expectedUrlPart == null || expectedUrlPart.trim().isEmpty()) {
@@ -256,7 +284,7 @@ public class TheInternetPage {
 
         driver.navigate().back();
         waitForUrl(expectedUrlPart);
-        visualPause(SHORT_VISUAL_PAUSE_MS);
+        visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
     public void openDynamicLoadingExample1() {
@@ -338,6 +366,24 @@ public class TheInternetPage {
     	  visualPause(LONG_VISUAL_PAUSE_MS);
     }
     
+    public void selectButtonForm() {
+    	  click(buttonForm);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectLinkNested() {
+    	  click(framesLinkNested);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public  String getLeftFrameText() {
+    	  driver.switchTo().defaultContent();
+    	  driver.switchTo().frame(driver.findElement(topframe));
+    	  driver.switchTo().frame(driver.findElement(leftframe));
+    	  
+    	  return visible(leftframeText).getText();
+    }
+    
     public void selectMenuFloat() {
     	  click(floatMenualLink);
     	  visualPause(SHORT_VISUAL_PAUSE_MS);
@@ -354,6 +400,20 @@ public class TheInternetPage {
     	  WebElement input = visible(forgotPasswordEmailInput);
     	  input.clear();
     	  input.sendKeys(email);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public void writeForm(String username) {
+    	  WebElement input = visible(usernameForm);
+    	  input.clear();
+    	  input.sendKeys(username);
+    	  visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    public void writePasswordForm(String password) {
+    	  WebElement passworInput = visible(passwordFor);
+    	  passworInput.clear();
+    	  passworInput.sendKeys(password);
     	  visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
