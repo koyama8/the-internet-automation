@@ -1,5 +1,9 @@
 package com.koyama.tests;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -177,72 +181,117 @@ public class BasicElementsTests extends UiTestSupport {
             "Example 2 should display the final loaded text."
         );
     }
-    
-    @Test
-    public void shouldEntryAdSuccessfully() {
-    	   page.openHomePage();
-    	   page.goToEntryAd();
-    	   
-    	   Assert.assertEquals(page.getEntryTextButton(), 
-    			   "Close");
-    	   Assert.assertEquals(page.getEntryText(), 
-    			   "It's commonly used to encourage a user to take an action "
-    			   + "(e.g., give their e-mail address to sign up for something or disable their ad blocker).");
-    	   page.selectCloseLink();   	
-    	   
-    	   Assert.assertEquals(page.getEntryTextAd(), 
-    			   "If closed, it will not appear on subsequent page loads.");    	       	   
-    }
-    
 
     @Test
-    public void shouldSelectAllDowload() {
-    	  page.openHomePage();
-    	  page.goToFileDowload();
-    	  
-    	  page.selectFilePDF();  
+    public void shouldDisplayAndCloseEntryAdSuccessfully() {
+        page.openHomePage();
+        page.goToEntryAd();
+
+        Assert.assertEquals(
+            page.getEntryTextButton(),
+            "Close",
+            "The Entry Ad modal close text is incorrect."
+        );
+
+        Assert.assertEquals(
+            page.getEntryText(),
+            "It's commonly used to encourage a user to take an action "
+                + "(e.g., give their e-mail address to sign up for something or disable their ad blocker).",
+            "The Entry Ad modal body text is incorrect."
+        );
+
+        page.selectCloseLink();
+
+        Assert.assertEquals(
+            page.getEntryTextAd(),
+            "If closed, it will not appear on subsequent page loads.",
+            "The Entry Ad page should explain the post-close behaviour."
+        );
     }
-    
+
     @Test
-    public void shoudSelectFloatMenu() {
-    	  page.openHomePage();
-    	  page.gotoMenuFloat();
-    	  
-    	  page.selectMenuFloat();
+    public void shouldDownloadFirstAvailableFileSuccessfully() {
+        page.openHomePage();
+        page.goToFileDownload();
+
+        List<String> availableFileNames = page.getAvailableDownloadFileNames();
+        Assert.assertFalse(
+            availableFileNames.isEmpty(),
+            "The File Download page should expose at least one file."
+        );
+
+        String downloadedFileName = page.downloadFirstAvailableFile();
+        Assert.assertTrue(
+            availableFileNames.contains(downloadedFileName),
+            "The downloaded file should come from the list displayed on the page."
+        );
+
+        Path downloadedFile = waitForDownloadedFile(downloadedFileName);
+        Assert.assertTrue(
+            Files.exists(downloadedFile),
+            "The selected file should be downloaded to the configured directory."
+        );
     }
-    
+
     @Test
-    public void selectPasswordForgot() {
-    	  page.openHomePage();
-    	  page.gotoPassword();
-    	  
-    	  page.writePassword("senium@teste.com.br");
-    	  page.selectButton();
+    public void shouldNavigateFloatingMenuAnchorsSuccessfully() {
+        page.openHomePage();
+        page.goToFloatingMenu();
+
+        page.selectMenuFloat();
+
+        Assert.assertTrue(
+            page.getCurrentUrl().endsWith("#about"),
+            "The floating menu flow should finish on the About anchor."
+        );
     }
-    
+
     @Test
-    public void writePasswordForm() {
-    	  page.openHomePage();
-    	  page.gotoForm();
-    	  
-      page.writeForm("tomsmith");
-      page.writePasswordForm("SuperSecretPassword!");
-      
-      page.selectButtonForm();    	  
+    public void shouldFillForgotPasswordFormSuccessfully() {
+        page.openHomePage();
+        page.goToForgotPassword();
+
+        String email = "selenium@teste.com.br";
+        page.writePassword(email);
+
+        Assert.assertEquals(
+            page.getForgotPasswordEmailValue(),
+            email,
+            "The forgot password e-mail field should keep the typed value."
+        );
     }
-    
+
     @Test
-    public void framesValidation() {
-    	   page.openHomePage();
-    	   page.gotoFrames();
-    	   
-    	   page.selectLinkNested();
-    	   Assert.assertEquals(page.getLeftFrameText(), "LEFT");
-    	   page.navigateBack("/frames");
-    
-    
+    public void shouldLogIntoSecureAreaSuccessfully() {
+        page.openHomePage();
+        page.goToFormAuthentication();
+
+        page.writeForm("tomsmith");
+        page.writePasswordForm("SuperSecretPassword!");
+        page.submitLoginForm();
+
+        Assert.assertEquals(
+            page.getSecureAreaTitleText(),
+            "Secure Area",
+            "The secure area title is incorrect after login."
+        );
+
+        Assert.assertTrue(
+            page.getFlashMessageText().contains("You logged into a secure area!"),
+            "The success message should confirm the login."
+        );
     }
-    
+
+    @Test
+    public void shouldValidateNestedFramesSuccessfully() {
+        page.openHomePage();
+        page.goToFrames();
+
+        page.selectLinkNested();
+        Assert.assertEquals(page.getLeftFrameText(), "LEFT");
+        page.navigateBack("/frames");
+    }
+
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {
         page.openHomePage();

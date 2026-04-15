@@ -1,5 +1,6 @@
 package com.koyama.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
@@ -35,19 +36,20 @@ public class TheInternetPage {
     private final By dynamicContentLink = By.linkText("Dynamic Content");
     private final By dynamicControlsLink = By.linkText("Dynamic Controls");
     private final By dynamicLoadingLink = By.linkText("Dynamic Loading");
-    private final By entryAd = By.linkText("Entry Ad");
-    private final By fileDownload = By.linkText("File Download");
-    private final By floatMenu = By.linkText("Floating Menu");
-    private final By passwordLink = By.linkText("Forgot Password");
-    private final By formAuthentication = By.linkText("Form Authentication");    
+    private final By entryAdLink = By.linkText("Entry Ad");
+    private final By fileDownloadLink = By.linkText("File Download");
+    private final By floatingMenuLink = By.linkText("Floating Menu");
+    private final By forgotPasswordLink = By.linkText("Forgot Password");
+    private final By formAuthenticationLink = By.linkText("Form Authentication");
     private final By framesLink = By.linkText("Frames");
-    
 
     // Button selectors
     private final By addElementButton = By.cssSelector("button[onclick='addElement()']");
     private final By deleteButtons = By.cssSelector("#elements button");
     private final By dynamicLoadingStartButton = By.cssSelector("#start button");
     private final By quxButton = By.cssSelector("a.button.success");
+    private final By forgotPasswordSubmitButton = By.cssSelector("#forgot_password button[type='submit']");
+    private final By loginSubmitButton = By.cssSelector("#login button[type='submit']");
 
     // CSS selectors
     private final By abTestingParagraph = By.cssSelector("#content .example p");
@@ -66,11 +68,13 @@ public class TheInternetPage {
     private final By homeLink = By.cssSelector("a[href='/']");
     private final By closeTextButton = By.cssSelector(".modal-footer p");
     private final By closeText = By.cssSelector(".modal-body p");
-    private final By floatMenualLink = By.cssSelector("#content a[href='#home'] ");
-    private final By floatMenuLink2 = By.xpath("//div[@class='example']//a[normalize-space()='News']");
-    private final By floatMenulink3 = By.cssSelector("#content a[href='#contact'");
+    private final By floatingMenuHomeLink = By.cssSelector("#menu a[href='#home']");
+    private final By floatingMenuNewsLink = By.cssSelector("#menu a[href='#news']");
+    private final By floatingMenuContactLink = By.cssSelector("#menu a[href='#contact']");
+    private final By floatingMenuAboutLink = By.cssSelector("#menu a[href='#about']");
     private final By framesLinkNested = By.cssSelector("#content a[href='/nested_frames']");
-    
+    private final By downloadLinks = By.cssSelector("#content .example a");
+    private final By secureAreaTitle = By.cssSelector("#content h2");
 
     // ID selectors
     private final By columnA = By.id("column-a");
@@ -79,41 +83,27 @@ public class TheInternetPage {
     private final By dropdownSelect = By.id("dropdown");
     private final By dynamicControlsMessage = By.id("message");
     private final By dynamicLoadingFinishText = By.id("finish");
-    private final By forgotPasswordEmailInput= By.id("email");
+    private final By forgotPasswordEmailInput = By.id("email");
+    private final By flashMessage = By.id("flash");
+    private final By usernameForm = By.id("username");
+    private final By passwordForm = By.id("password");
 
     // XPath selectors
     private final By dynamicControlsEnableInputButton =
         By.xpath("//form[@id='input-example']//button[@onclick='swapInput()']");
     private final By dynamicControlsToggleCheckboxButton =
         By.xpath("//form[@id='checkbox-example']//button[@onclick='swapCheckbox()']");
-    private final By entryadlButton = 
-    		By.xpath("//div[@class='modal-footer']//p[normalize-space()='Close']");
-    private final By entryText = 
-    		By.xpath("//div[@class='example']//p[normalize-space()='If closed, it will not appear on subsequent page loads.']");
-    private final By fileDowloadPDF =
-    		By.xpath("//a[contains(@href,'p_compress.pdf')]");
-    private final By gestionDePruebasDocxLink  =
-    		By.xpath("//div[@class='example']//a[normalize-space()='Gestion de pruebas.docx']");
-    private final By tmpTXT =
-    		By.xpath("//div[@class='example']//a[normalize-space()='tmp0060drcz.txt']");
-    private final By buttonPassword = 
-    		By.xpath("//form[@id='forgot_password']//button[@type='submit']");
-    private final By floatMenulink4 = 
-    		By.xpath("//div[@class='example']//a[normalize-space()='About']");
-    private final By usernameForm =
-    		By.xpath("//form[@id='login']//input[@type='text']");
-    private final By passwordFor = 
-    		By.xpath("//form[@id='login']//input[@type='password']");
-    private final By buttonForm =
-    		By.xpath("//form[@id='login']//button[@type='submit']");
-    private final By leftframeText = 
-    		By.xpath("//body[normalize-space()='LEFT']");
-    
-    
-    // Name
-    private final By topframe = By.name("frame-top");
-    private final By leftframe = By.name("frame-left");
-    
+    private final By entryAdCloseButton =
+        By.xpath("//div[@class='modal-footer']//p[normalize-space()='Close']");
+    private final By entryAdInformationText =
+        By.xpath("//div[@class='example']//p[normalize-space()='If closed, it will not appear on subsequent page loads.']");
+    private final By leftFrameText =
+        By.xpath("//body[normalize-space()='LEFT']");
+
+    // Name selectors
+    private final By topFrame = By.name("frame-top");
+    private final By leftFrame = By.name("frame-left");
+
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -133,6 +123,10 @@ public class TheInternetPage {
 
     private void waitForUrl(String expectedUrlPart) {
         wait.until(ExpectedConditions.urlContains(expectedUrlPart));
+    }
+
+    private String normalizeText(String rawText) {
+        return rawText.replace("\u00D7", "").replaceAll("\\s+", " ").trim();
     }
 
     // Navigation and action methods
@@ -157,6 +151,21 @@ public class TheInternetPage {
         for (int index = 0; index < amount; index++) {
             click(quxButton);
         }
+    }
+
+    public String downloadFirstAvailableFile() {
+        List<WebElement> fileLinks = visibleAll(downloadLinks);
+
+        for (WebElement fileLink : fileLinks) {
+            String fileName = fileLink.getText().trim();
+
+            if (!fileName.isEmpty()) {
+                wait.until(ExpectedConditions.elementToBeClickable(fileLink)).click();
+                return fileName;
+            }
+        }
+
+        throw new IllegalStateException("No downloadable file was available on the page.");
     }
 
     public void dragColumnAToColumnB() {
@@ -240,41 +249,41 @@ public class TheInternetPage {
         waitForUrl("/dynamic_loading");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
+
     public void goToEntryAd() {
-    	   click(entryAd);
-    	   waitForUrl("/entry_ad");
-    	   visualPause(SHORT_VISUAL_PAUSE_MS);
+        click(entryAdLink);
+        waitForUrl("/entry_ad");
+        visualPause(SHORT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToFileDowload() {
-    	   click(fileDownload);
-    	   waitForUrl("/download");
-    	   visualPause(SHORT_VISUAL_PAUSE_MS);
+
+    public void goToFileDownload() {
+        click(fileDownloadLink);
+        waitForUrl("/download");
+        visualPause(SHORT_VISUAL_PAUSE_MS);
     }
-    
-    public void gotoMenuFloat() {
-    	  click(floatMenu);
-    	  waitForUrl("/floating_menu");
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
+
+    public void goToFloatingMenu() {
+        click(floatingMenuLink);
+        waitForUrl("/floating_menu");
+        visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
-    public void gotoPassword() {
-    	  click(passwordLink);
-    	  waitForUrl("/forgot_password");
-    	  visualPause(SHORT_VISUAL_PAUSE_MS);
+
+    public void goToForgotPassword() {
+        click(forgotPasswordLink);
+        waitForUrl("/forgot_password");
+        visualPause(SHORT_VISUAL_PAUSE_MS);
     }
-    
-    public void gotoForm() {
-    	 click(formAuthentication);
-    	 waitForUrl("/login");
-    	 visualPause(LONG_VISUAL_PAUSE_MS);
+
+    public void goToFormAuthentication() {
+        click(formAuthenticationLink);
+        waitForUrl("/login");
+        visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
-    public void gotoFrames() {
-    	  click(framesLink);
-    	  waitForUrl("/frames");
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToFrames() {
+        click(framesLink);
+        waitForUrl("/frames");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void navigateBack(String expectedUrlPart) {
@@ -337,10 +346,35 @@ public class TheInternetPage {
         }
     }
 
+    public void selectCloseLink() {
+        click(entryAdCloseButton);
+        visualPause(SHORT_VISUAL_PAUSE_MS);
+    }
+
     public void selectDropdownOptionByText(String optionText) {
         Select select = new Select(visible(dropdownSelect));
         select.selectByVisibleText(optionText);
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public void selectLinkNested() {
+        click(framesLinkNested);
+        waitForUrl("/nested_frames");
+        visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
+    public void selectMenuFloat() {
+        click(floatingMenuHomeLink);
+        waitForUrl("#home");
+
+        click(floatingMenuNewsLink);
+        waitForUrl("#news");
+
+        click(floatingMenuContactLink);
+        waitForUrl("#contact");
+
+        click(floatingMenuAboutLink);
+        waitForUrl("#about");
     }
 
     public void startDynamicLoadingExample() {
@@ -348,73 +382,69 @@ public class TheInternetPage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(dynamicLoadingFinishText));
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
-    public void selectCloseLink() {
-    	  click(entryadlButton);
-    	  visualPause(SHORT_VISUAL_PAUSE_MS);
-    }
-    
-    public void selectFilePDF() {
-    	  click(fileDowloadPDF);
-    	  click(gestionDePruebasDocxLink );
-    	  click(tmpTXT);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
-    }
-    
-    public void selectButton() {
-    	  click(buttonPassword);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
-    }
-    
-    public void selectButtonForm() {
-    	  click(buttonForm);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
-    }
-    
-    public void selectLinkNested() {
-    	  click(framesLinkNested);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
-    }
-    
-    public  String getLeftFrameText() {
-    	  driver.switchTo().defaultContent();
-    	  driver.switchTo().frame(driver.findElement(topframe));
-    	  driver.switchTo().frame(driver.findElement(leftframe));
-    	  
-    	  return visible(leftframeText).getText();
-    }
-    
-    public void selectMenuFloat() {
-    	  click(floatMenualLink);
-    	  visualPause(SHORT_VISUAL_PAUSE_MS);
-    	  click(floatMenuLink2);
-    	  visualPause(SHORT_VISUAL_PAUSE_MS);
-    	  click(floatMenulink3);
-    	  visualPause(SHORT_VISUAL_PAUSE_MS);
-    	  click(floatMenulink4);
-    	  visualPause(SHORT_VISUAL_PAUSE_MS);
 
+    public void submitForgotPasswordRequest() {
+        click(forgotPasswordSubmitButton);
+        waitForUrl("/email_sent");
     }
-    
-    public void writePassword(String email) {
-    	  WebElement input = visible(forgotPasswordEmailInput);
-    	  input.clear();
-    	  input.sendKeys(email);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
+
+    public void submitLoginForm() {
+        click(loginSubmitButton);
+        waitForUrl("/secure");
     }
-    
+
     public void writeForm(String username) {
-    	  WebElement input = visible(usernameForm);
-    	  input.clear();
-    	  input.sendKeys(username);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
+        WebElement input = visible(usernameForm);
+        input.clear();
+        input.sendKeys(username);
+        visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
+
+    public void writePassword(String email) {
+        WebElement input = visible(forgotPasswordEmailInput);
+        input.clear();
+        input.sendKeys(email);
+        visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
     public void writePasswordForm(String password) {
-    	  WebElement passworInput = visible(passwordFor);
-    	  passworInput.clear();
-    	  passworInput.sendKeys(password);
-    	  visualPause(LONG_VISUAL_PAUSE_MS);
+        WebElement passwordInput = visible(passwordForm);
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
+        visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
+    // Compatibility aliases
+    public void goToFileDowload() {
+        goToFileDownload();
+    }
+
+    public void gotoMenuFloat() {
+        goToFloatingMenu();
+    }
+
+    public void gotoPassword() {
+        goToForgotPassword();
+    }
+
+    public void gotoForm() {
+        goToFormAuthentication();
+    }
+
+    public void gotoFrames() {
+        goToFrames();
+    }
+
+    public void selectFilePDF() {
+        downloadFirstAvailableFile();
+    }
+
+    public void selectButton() {
+        submitForgotPasswordRequest();
+    }
+
+    public void selectButtonForm() {
+        submitLoginForm();
     }
 
     // Read and validation methods
@@ -449,6 +479,21 @@ public class TheInternetPage {
         return brokenImagesCount;
     }
 
+    public List<String> getAvailableDownloadFileNames() {
+        List<WebElement> fileLinks = visibleAll(downloadLinks);
+        List<String> fileNames = new ArrayList<>();
+
+        for (WebElement fileLink : fileLinks) {
+            String fileName = fileLink.getText().trim();
+
+            if (!fileName.isEmpty()) {
+                fileNames.add(fileName);
+            }
+        }
+
+        return fileNames;
+    }
+
     public String getABTestingParagraphText() {
         return visible(abTestingParagraph).getText();
     }
@@ -478,6 +523,10 @@ public class TheInternetPage {
         return visible(contextMenuDescription).getText();
     }
 
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
+    }
+
     public int getDeleteButtonsCount() {
         return driver.findElements(deleteButtons).size();
     }
@@ -502,23 +551,42 @@ public class TheInternetPage {
         return visible(dynamicLoadingTitle).getText();
     }
 
+    public String getEntryText() {
+        return visible(closeText).getText();
+    }
+
+    public String getEntryTextAd() {
+        return visible(entryAdInformationText).getText();
+    }
+
+    public String getEntryTextButton() {
+        return visible(closeTextButton).getText();
+    }
+
+    public String getFlashMessageText() {
+        return normalizeText(visible(flashMessage).getText());
+    }
+
+    public String getForgotPasswordEmailValue() {
+        return visible(forgotPasswordEmailInput).getAttribute("value");
+    }
+
+    public String getLeftFrameText() {
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(driver.findElement(topFrame));
+        driver.switchTo().frame(driver.findElement(leftFrame));
+
+        return visible(leftFrameText).getText();
+    }
+
+    public String getSecureAreaTitleText() {
+        return visible(secureAreaTitle).getText();
+    }
+
     public String getSelectedDropdownOptionText() {
         Select select = new Select(visible(dropdownSelect));
         return select.getFirstSelectedOption().getText();
     }
-    
-    public String getEntryTextButton() {
-    	   return visible(closeTextButton).getText();
-    }
-    
-    public String  getEntryText() {
-    	 return visible(closeText).getText();
-    }
-    
-    public String getEntryTextAd() {
-    	  return visible(entryText).getText();
-    }
-
 
     public boolean isOnDisappearingElementsPage() {
         return driver.getCurrentUrl().contains("/disappearing_elements");
@@ -526,6 +594,10 @@ public class TheInternetPage {
 
     // Intentional pause for study mode so the user can visually follow the execution.
     private void visualPause(long milliseconds) {
+        if (!Boolean.parseBoolean(System.getProperty("study.mode", "false"))) {
+            return;
+        }
+
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException exception) {
