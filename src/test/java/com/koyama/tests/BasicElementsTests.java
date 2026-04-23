@@ -291,6 +291,18 @@ public class BasicElementsTests extends UiTestSupport {
         Assert.assertEquals(page.getLeftFrameText(), "LEFT");
         page.navigateBack("/frames");
     }
+    
+    @Test
+    public void shouldMoveHorizontalSliderToThreePointFive() {
+    	    page.openHomePage();
+    	    page.goToHorizontalSlider();
+    	    
+    	    page.setHorizontalSliderValue("3.5");
+    
+    	    Assert.assertEquals(page.getHorizontalSliderValue(), 
+    	    		"3.5",
+    	    "O valor do slider deveria ser 3.5.");
+    }
 
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {

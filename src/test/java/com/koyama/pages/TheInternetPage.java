@@ -1,11 +1,13 @@
 package com.koyama.pages;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -45,7 +47,8 @@ public class TheInternetPage {
     private final By forgotPasswordLink = By.linkText("Forgot Password");
     private final By formAuthenticationLink = By.linkText("Form Authentication");
     private final By framesLink = By.linkText("Frames");
-
+    private final By horizontalSliderLink  = By.linkText("Horizontal Slider");
+    
     /**
      * Seletores CSS.
      * Aqui ficam botoes, textos, links internos, listas e elementos visuais da tela.
@@ -79,6 +82,7 @@ public class TheInternetPage {
     private final By framesLinkNested = By.cssSelector("#content a[href='/nested_frames']");
     private final By downloadLinks = By.cssSelector("#content .example a");
     private final By secureAreaTitle = By.cssSelector("#content h2");
+    private final By horizontalSliderInput  = By.cssSelector("input[type='range']");
 
     /**
      * Seletores por ID.
@@ -94,7 +98,8 @@ public class TheInternetPage {
     private final By flashMessage = By.id("flash");
     private final By usernameForm = By.id("username");
     private final By passwordForm = By.id("password");
-
+    private final By horizontalSliderValue  = By.id("range");
+    
     /**
      * Seletores por name.
      * Usados principalmente no fluxo de frames.
@@ -254,6 +259,12 @@ public class TheInternetPage {
         click(framesLink);
         waitForUrl("/frames");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToHorizontalSlider() {
+    	  click(horizontalSliderLink);
+    	  waitForUrl("/horizontal_slider");
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void openDynamicLoadingExample1() {
@@ -619,7 +630,38 @@ public class TheInternetPage {
         Select select = new Select(visible(dropdownSelect));
         return select.getFirstSelectedOption().getText();
     }
+    
+    
+    public void setHorizontalSliderValue(String targetValue) {
+        WebElement slider = visible(horizontalSliderInput);
+        slider.click();
 
+        BigDecimal target = new BigDecimal(targetValue);
+        BigDecimal current = new BigDecimal(slider.getAttribute("value"));
+        BigDecimal step = new BigDecimal("0.5");
+
+        int moves = target.subtract(current).divide(step).intValueExact();
+        Keys direction = moves > 0 ? Keys.ARROW_RIGHT : Keys.ARROW_LEFT;
+
+        for (int index = 0; index < Math.abs(moves); index++) {
+            slider.sendKeys(direction);
+        }
+
+        wait.until(ExpectedConditions.textToBe(horizontalSliderValue, formatSliderValue(target)));
+    }
+
+    public String getHorizontalSliderValue() {
+    	  return visible(horizontalSliderValue).getText();
+    }
+    
+    /**
+     * Formata o valor para ficar igual ao texto exibido na tela.
+     */
+    private String formatSliderValue(BigDecimal value) {
+    	    return value.stripTrailingZeros().toPlainString(); 
+    }
+    
+    
     public boolean isOnDisappearingElementsPage() {
         return driver.getCurrentUrl().contains("/disappearing_elements");
     }
