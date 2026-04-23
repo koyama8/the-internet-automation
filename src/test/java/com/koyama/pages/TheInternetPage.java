@@ -48,6 +48,8 @@ public class TheInternetPage {
     private final By formAuthenticationLink = By.linkText("Form Authentication");
     private final By framesLink = By.linkText("Frames");
     private final By horizontalSliderLink  = By.linkText("Horizontal Slider");
+    private final By inputsLink = By.linkText("Inputs");
+    private final By infinitScroll = By.linkText("Infinite Scroll");
     
     /**
      * Seletores CSS.
@@ -83,6 +85,9 @@ public class TheInternetPage {
     private final By downloadLinks = By.cssSelector("#content .example a");
     private final By secureAreaTitle = By.cssSelector("#content h2");
     private final By horizontalSliderInput  = By.cssSelector("input[type='range']");
+    private final By numberInput  = By.cssSelector("input[type='number']");
+    private final By infiniteScrollItems = By.cssSelector(".jscroll-added");
+    
 
     /**
      * Seletores por ID.
@@ -264,6 +269,18 @@ public class TheInternetPage {
     public void goToHorizontalSlider() {
     	  click(horizontalSliderLink);
     	  waitForUrl("/horizontal_slider");
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToInputNumber() {
+    	  click(inputsLink);
+    	  waitForUrl("/inputs");
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToLoad() {
+    	  click(infinitScroll);
+    	  waitForUrl("/infinite_scroll");
     	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
@@ -450,6 +467,45 @@ public class TheInternetPage {
         passwordInput.sendKeys(password);
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
+    
+    public void typeNumberInput(String value) {
+    	    WebElement input = visible(numberInput);
+    	    input.clear();
+    	    input.sendKeys(value);
+    	    visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
+    public void increaseNumberInput(int value) {
+    	    WebElement input = visible(numberInput);
+    	    input.click();
+    	    
+    	    for(int index = 0; index < value; index++) {
+    	    	      input.sendKeys(Keys.ARROW_UP);
+    	      	  visualPause(SHORT_VISUAL_PAUSE_MS);
+
+    	    }
+    	   }
+    
+    /**
+     * Faz scroll ate o final da pagina.
+     */
+    public void scrollToPageBottom() {
+    	    JavascriptExecutor js = (JavascriptExecutor) driver;
+    	    js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    	    visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+    
+    
+    public void scrollUntilNewContentLoads() {
+    	    int initialcount = getInfiniteScrollItemsCount();
+    	    
+    	    scrollToPageBottom();
+    	    
+    	    wait.until(driver -> getInfiniteScrollItemsCount() > initialcount);
+    	    
+    }
+    
+    
 
     /**
      * Aliases de compatibilidade.
@@ -629,6 +685,14 @@ public class TheInternetPage {
     public String getSelectedDropdownOptionText() {
         Select select = new Select(visible(dropdownSelect));
         return select.getFirstSelectedOption().getText();
+    }
+    
+    public String getNumberInputValue() {
+    	   return visible(numberInput).getAttribute("value");
+    }
+    
+    public int getInfiniteScrollItemsCount() {
+    	    return driver.findElements(infiniteScrollItems).size();
     }
     
     

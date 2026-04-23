@@ -303,7 +303,36 @@ public class BasicElementsTests extends UiTestSupport {
     	    		"3.5",
     	    "O valor do slider deveria ser 3.5.");
     }
-
+    
+    @Test
+    public void shouldIncreaseNumberInputSuccessfully() {
+        page.openHomePage();
+        page.goToInputNumber();
+        
+        page.typeNumberInput("100");
+        page.increaseNumberInput(10);
+        
+        Assert.assertEquals(page.getNumberInputValue(), "110",
+        		"O campo numerico deveria conter o valor 110.");
+        
+    }
+    
+    @Test
+    public void shouldLoadNewContentWhenScrollingDown() {
+    	    page.openHomePage();
+    	    page.goToLoad();
+    	    
+    	    int initialcount = page.getInfiniteScrollItemsCount();
+    	    
+    	    page.scrollUntilNewContentLoads();
+    	    
+    	    int initialFinal = page.getInfiniteScrollItemsCount();
+    	    
+    	    Assert.assertTrue(initialFinal > initialcount ,
+    	    		"A pagina deveria carregar novos blocos apos o scroll.");
+    	    
+    }
+    
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {
         page.openHomePage();
