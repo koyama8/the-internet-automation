@@ -313,8 +313,25 @@ public class BasicElementsTests extends UiTestSupport {
         page.increaseNumberInput(10);
         
         Assert.assertEquals(page.getNumberInputValue(), "110",
-        		"O campo numerico deveria conter o valor 110.");
-        
+        		"O campo numerico deveria conter o valor 110.");      
+    }
+    
+    @Test
+    public void shouldClickEnableJQueryUI() {
+    	   page.openHomePage();
+    	   page.goToQueryUI();
+    	   
+    	   page.selectEnabledDowloads();
+    }
+  
+    @Test
+    public void shouldClickEnableJBackQueryUI() {
+    	  page.openHomePage();
+    	  page.goToQueryUI();
+    	  
+    	  page.selectBackToJQueryUi();
+    	  Assert.assertEquals(page.getTextoJQueryUI(), 
+    			  "JQuery UI is many things, but one thing specifically that causes automation challenges is their set of Widgets");
     }
     
     @Test

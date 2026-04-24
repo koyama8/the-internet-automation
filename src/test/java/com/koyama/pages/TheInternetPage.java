@@ -50,6 +50,7 @@ public class TheInternetPage {
     private final By horizontalSliderLink  = By.linkText("Horizontal Slider");
     private final By inputsLink = By.linkText("Inputs");
     private final By infinitScroll = By.linkText("Infinite Scroll");
+    private final By jQuery = By.linkText("JQuery UI Menus");
     
     /**
      * Seletores CSS.
@@ -87,8 +88,10 @@ public class TheInternetPage {
     private final By horizontalSliderInput  = By.cssSelector("input[type='range']");
     private final By numberInput  = By.cssSelector("input[type='number']");
     private final By infiniteScrollItems = By.cssSelector(".jscroll-added");
-    
+    private final By pdfJQueryUiOption  = By.cssSelector("#menu  a[href='/download/jqueryui/menu/menu.pdf']");
+    private final By JQueryUIText = By.cssSelector("#content p");
 
+    
     /**
      * Seletores por ID.
      * Aqui ficam elementos mais estaveis da pagina, como campos, mensagens e containers.
@@ -126,7 +129,14 @@ public class TheInternetPage {
         By.xpath("//div[@class='example']//p[normalize-space()='If closed, it will not appear on subsequent page loads.']");
     private final By leftFrameText =
         By.xpath("//body[normalize-space()='LEFT']");
-
+    private final By enabledJQueryUiOption  = 
+    		By.xpath("//ul[@id='menu']//a[normalize-space()='Enabled']");
+    private final By downloadsJQueryUiOption = 
+    		By.xpath("//ul[@id='menu']//a[normalize-space()='Downloads']");
+    private final By backtoJQueryUI =
+    	    By.xpath("//ul[@id='menu']//a[normalize-space()='Back to JQuery UI']");
+    
+    
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -278,6 +288,12 @@ public class TheInternetPage {
     	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
     
+    public void goToQueryUI() {
+    	  click(jQuery);
+    	  waitForUrl("/jqueryui/menu");
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
     public void goToLoad() {
     	  click(infinitScroll);
     	  waitForUrl("/infinite_scroll");
@@ -416,6 +432,36 @@ public class TheInternetPage {
         waitForUrl("/nested_frames");
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
+    
+    public void selectEnabledDowloads() {
+    	   hover(enabledJQueryUiOption);
+    	   visible(downloadsJQueryUiOption);
+    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    	   
+    	   hover(downloadsJQueryUiOption);
+    	   visible(pdfJQueryUiOption);
+    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    	   
+       click(pdfJQueryUiOption);
+       visualPause(DEFAULT_VISUAL_PAUSE_MS);
+       
+       hover(enabledJQueryUiOption);
+	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+	
+	   click(backtoJQueryUI);
+	   driver.navigate().back();
+	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectBackToJQueryUi() {
+    	   hover(enabledJQueryUiOption);
+    	   visible(backtoJQueryUI);
+    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    	   
+    	   click(backtoJQueryUI);
+    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
 
     public void selectMenuFloat() {
         click(floatingMenuHomeLink);
@@ -695,6 +741,9 @@ public class TheInternetPage {
     	    return driver.findElements(infiniteScrollItems).size();
     }
     
+    public String getTextoJQueryUI() {
+    	    return visible(JQueryUIText).getText();
+    }
     
     public void setHorizontalSliderValue(String targetValue) {
         WebElement slider = visible(horizontalSliderInput);
@@ -746,5 +795,15 @@ public class TheInternetPage {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Execution was interrupted during the visual pause.", exception);
         }
+    }
+    
+    /**
+     * Move o mouse ate uma opcao do menu.
+     * Esse helper e importante porque o JQuery UI Menu abre submenus por hover.
+     */
+    private void hover(By locator) {
+    	   WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    	   new Actions(driver).moveToElement(element).perform();
+    	
     }
 }
