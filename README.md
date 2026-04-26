@@ -43,7 +43,7 @@ O projeto utiliza:
 the-internet-automation/
 ├── src/test/java/com/koyama/
 │   ├── base/
-│   │   └── BaseTest.java
+│   │   └── UiTestSupport.java
 │   ├── listeners/
 │   │   └── ScreenshotListener.java
 │   ├── pages/
@@ -56,36 +56,3 @@ the-internet-automation/
 ├── pom.xml
 ├── .gitignore
 └── README.md
-```
-
----
-
-## ▶️ Execução
-
-Na raiz do projeto, execute:
-
-```bash
-mvn clean test
-```
-
----
-
-## 📊 Relatório
-
-Após a execução dos testes, abra o relatório com:
-
-```bash
-allure serve target/allure-results
-```
-
----
-
-## 🎯 Objetivo
-
-Este repositório foi criado para consolidar prática em automação web com Java e evoluir gradualmente a arquitetura do projeto, aproximando-o de um cenário mais real de mercado.
-
----
-
-## 🚧 Status
-
-Projeto em evolução contínua, com foco em melhoria da estrutura, expansão de cenários automatizados e refinamento da abordagem de automação.
