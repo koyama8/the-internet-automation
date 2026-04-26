@@ -238,7 +238,7 @@ public class BasicElementsTests extends UiTestSupport {
         page.openHomePage();
         page.goToFloatingMenu();
 
-        page.selectMenuFloat();
+        page.navigateFloatingMenuAnchors();
 
         Assert.assertTrue(
             page.getCurrentUrl().endsWith("#about"),
@@ -252,7 +252,7 @@ public class BasicElementsTests extends UiTestSupport {
         page.goToForgotPassword();
 
         String email = "selenium@teste.com.br";
-        page.writePassword(email);
+        page.typeForgotPasswordEmail(email);
 
         Assert.assertEquals(
             page.getForgotPasswordEmailValue(),
@@ -266,8 +266,8 @@ public class BasicElementsTests extends UiTestSupport {
         page.openHomePage();
         page.goToFormAuthentication();
 
-        page.writeForm("tomsmith");
-        page.writePasswordForm("SuperSecretPassword!");
+        page.typeUsername("tomsmith");
+        page.typeLoginPassword("SuperSecretPassword!");
         page.submitLoginForm();
 
         Assert.assertEquals(
@@ -291,65 +291,74 @@ public class BasicElementsTests extends UiTestSupport {
         Assert.assertEquals(page.getLeftFrameText(), "LEFT");
         page.navigateBack("/frames");
     }
-    
+
     @Test
     public void shouldMoveHorizontalSliderToThreePointFive() {
-    	    page.openHomePage();
-    	    page.goToHorizontalSlider();
-    	    
-    	    page.setHorizontalSliderValue("3.5");
-    
-    	    Assert.assertEquals(page.getHorizontalSliderValue(), 
-    	    		"3.5",
-    	    "O valor do slider deveria ser 3.5.");
+        page.openHomePage();
+        page.goToHorizontalSlider();
+
+        page.setHorizontalSliderValue("3.5");
+
+        Assert.assertEquals(
+            page.getHorizontalSliderValue(),
+            "3.5",
+            "O valor do slider deveria ser 3.5."
+        );
     }
-    
+
     @Test
     public void shouldIncreaseNumberInputSuccessfully() {
         page.openHomePage();
         page.goToInputNumber();
-        
+
         page.typeNumberInput("100");
         page.increaseNumberInput(10);
-        
-        Assert.assertEquals(page.getNumberInputValue(), "110",
-        		"O campo numerico deveria conter o valor 110.");      
+
+        Assert.assertEquals(
+            page.getNumberInputValue(),
+            "110",
+            "O campo numerico deveria conter o valor 110."
+        );
     }
-    
+
     @Test
-    public void shouldClickEnableJQueryUI() {
-    	   page.openHomePage();
-    	   page.goToQueryUI();
-    	   
-    	   page.selectEnabledDowloads();
+    public void shouldDownloadPdfFromJqueryUiMenu() {
+        page.openHomePage();
+        page.goToJqueryUiMenu();
+
+        page.downloadPdfFromJqueryUiMenu();
     }
-  
+
     @Test
-    public void shouldClickEnableJBackQueryUI() {
-    	  page.openHomePage();
-    	  page.goToQueryUI();
-    	  
-    	  page.selectBackToJQueryUi();
-    	  Assert.assertEquals(page.getTextoJQueryUI(), 
-    			  "JQuery UI is many things, but one thing specifically that causes automation challenges is their set of Widgets");
+    public void shouldNavigateBackFromJqueryUiMenu() {
+        page.openHomePage();
+        page.goToJqueryUiMenu();
+
+        page.selectBackToJqueryUi();
+
+        Assert.assertEquals(
+            page.getJqueryUiDescriptionText(),
+            "JQuery UI is many things, but one thing specifically that causes automation challenges is their set of Widgets"
+        );
     }
-    
+
     @Test
     public void shouldLoadNewContentWhenScrollingDown() {
-    	    page.openHomePage();
-    	    page.goToLoad();
-    	    
-    	    int initialcount = page.getInfiniteScrollItemsCount();
-    	    
-    	    page.scrollUntilNewContentLoads();
-    	    
-    	    int initialFinal = page.getInfiniteScrollItemsCount();
-    	    
-    	    Assert.assertTrue(initialFinal > initialcount ,
-    	    		"A pagina deveria carregar novos blocos apos o scroll.");
-    	    
+        page.openHomePage();
+        page.goToInfiniteScroll();
+
+        int initialCount = page.getInfiniteScrollItemsCount();
+
+        page.scrollUntilNewContentLoads();
+
+        int finalCount = page.getInfiniteScrollItemsCount();
+
+        Assert.assertTrue(
+            finalCount > initialCount,
+            "A pagina deveria carregar novos blocos apos o scroll."
+        );
     }
-    
+
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {
         page.openHomePage();

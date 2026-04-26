@@ -1,6 +1,8 @@
 # Build
 target/
 test-output/
+bin/
+*.class
 
 # Allure
 allure-report/

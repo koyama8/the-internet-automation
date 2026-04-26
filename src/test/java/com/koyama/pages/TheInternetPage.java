@@ -47,11 +47,11 @@ public class TheInternetPage {
     private final By forgotPasswordLink = By.linkText("Forgot Password");
     private final By formAuthenticationLink = By.linkText("Form Authentication");
     private final By framesLink = By.linkText("Frames");
-    private final By horizontalSliderLink  = By.linkText("Horizontal Slider");
+    private final By horizontalSliderLink = By.linkText("Horizontal Slider");
     private final By inputsLink = By.linkText("Inputs");
-    private final By infinitScroll = By.linkText("Infinite Scroll");
-    private final By jQuery = By.linkText("JQuery UI Menus");
-    
+    private final By infiniteScrollLink = By.linkText("Infinite Scroll");
+    private final By jqueryUiMenusLink = By.linkText("JQuery UI Menus");
+
     /**
      * Seletores CSS.
      * Aqui ficam botoes, textos, links internos, listas e elementos visuais da tela.
@@ -85,13 +85,12 @@ public class TheInternetPage {
     private final By framesLinkNested = By.cssSelector("#content a[href='/nested_frames']");
     private final By downloadLinks = By.cssSelector("#content .example a");
     private final By secureAreaTitle = By.cssSelector("#content h2");
-    private final By horizontalSliderInput  = By.cssSelector("input[type='range']");
-    private final By numberInput  = By.cssSelector("input[type='number']");
+    private final By horizontalSliderInput = By.cssSelector("input[type='range']");
+    private final By numberInput = By.cssSelector("input[type='number']");
     private final By infiniteScrollItems = By.cssSelector(".jscroll-added");
-    private final By pdfJQueryUiOption  = By.cssSelector("#menu  a[href='/download/jqueryui/menu/menu.pdf']");
-    private final By JQueryUIText = By.cssSelector("#content p");
+    private final By jqueryUiPdfDownloadOption = By.cssSelector("#menu  a[href='/download/jqueryui/menu/menu.pdf']");
+    private final By jqueryUiDescriptionText = By.cssSelector("#content p");
 
-    
     /**
      * Seletores por ID.
      * Aqui ficam elementos mais estaveis da pagina, como campos, mensagens e containers.
@@ -106,8 +105,8 @@ public class TheInternetPage {
     private final By flashMessage = By.id("flash");
     private final By usernameForm = By.id("username");
     private final By passwordForm = By.id("password");
-    private final By horizontalSliderValue  = By.id("range");
-    
+    private final By horizontalSliderValue = By.id("range");
+
     /**
      * Seletores por name.
      * Usados principalmente no fluxo de frames.
@@ -129,14 +128,13 @@ public class TheInternetPage {
         By.xpath("//div[@class='example']//p[normalize-space()='If closed, it will not appear on subsequent page loads.']");
     private final By leftFrameText =
         By.xpath("//body[normalize-space()='LEFT']");
-    private final By enabledJQueryUiOption  = 
-    		By.xpath("//ul[@id='menu']//a[normalize-space()='Enabled']");
-    private final By downloadsJQueryUiOption = 
-    		By.xpath("//ul[@id='menu']//a[normalize-space()='Downloads']");
-    private final By backtoJQueryUI =
-    	    By.xpath("//ul[@id='menu']//a[normalize-space()='Back to JQuery UI']");
-    
-    
+    private final By enabledJqueryUiOption =
+        By.xpath("//ul[@id='menu']//a[normalize-space()='Enabled']");
+    private final By downloadsJqueryUiOption =
+        By.xpath("//ul[@id='menu']//a[normalize-space()='Downloads']");
+    private final By backToJqueryUiOption =
+        By.xpath("//ul[@id='menu']//a[normalize-space()='Back to JQuery UI']");
+
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -275,29 +273,29 @@ public class TheInternetPage {
         waitForUrl("/frames");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
+
     public void goToHorizontalSlider() {
-    	  click(horizontalSliderLink);
-    	  waitForUrl("/horizontal_slider");
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+        click(horizontalSliderLink);
+        waitForUrl("/horizontal_slider");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
+
     public void goToInputNumber() {
-    	  click(inputsLink);
-    	  waitForUrl("/inputs");
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+        click(inputsLink);
+        waitForUrl("/inputs");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToQueryUI() {
-    	  click(jQuery);
-    	  waitForUrl("/jqueryui/menu");
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToJqueryUiMenu() {
+        click(jqueryUiMenusLink);
+        waitForUrl("/jqueryui/menu");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToLoad() {
-    	  click(infinitScroll);
-    	  waitForUrl("/infinite_scroll");
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToInfiniteScroll() {
+        click(infiniteScrollLink);
+        waitForUrl("/infinite_scroll");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void openDynamicLoadingExample1() {
@@ -432,38 +430,37 @@ public class TheInternetPage {
         waitForUrl("/nested_frames");
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
-    public void selectEnabledDowloads() {
-    	   hover(enabledJQueryUiOption);
-    	   visible(downloadsJQueryUiOption);
-    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
-    	   
-    	   hover(downloadsJQueryUiOption);
-    	   visible(pdfJQueryUiOption);
-    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
-    	   
-       click(pdfJQueryUiOption);
-       visualPause(DEFAULT_VISUAL_PAUSE_MS);
-       
-       hover(enabledJQueryUiOption);
-	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
-	
-	   click(backtoJQueryUI);
-	   driver.navigate().back();
-	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
-    }
-    
-    public void selectBackToJQueryUi() {
-    	   hover(enabledJQueryUiOption);
-    	   visible(backtoJQueryUI);
-    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
-    	   
-    	   click(backtoJQueryUI);
-    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void downloadPdfFromJqueryUiMenu() {
+        hover(enabledJqueryUiOption);
+        visible(downloadsJqueryUiOption);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+        hover(downloadsJqueryUiOption);
+        visible(jqueryUiPdfDownloadOption);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+        click(jqueryUiPdfDownloadOption);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+        hover(enabledJqueryUiOption);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+        click(backToJqueryUiOption);
+        driver.navigate().back();
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
+    public void selectBackToJqueryUi() {
+        hover(enabledJqueryUiOption);
+        visible(backToJqueryUiOption);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
 
-    public void selectMenuFloat() {
+        click(backToJqueryUiOption);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+
+    public void navigateFloatingMenuAnchors() {
         click(floatingMenuHomeLink);
         waitForUrl("#home");
 
@@ -493,65 +490,67 @@ public class TheInternetPage {
         waitForUrl("/secure");
     }
 
-    public void writeForm(String username) {
+    public void typeUsername(String username) {
         WebElement input = visible(usernameForm);
         input.clear();
         input.sendKeys(username);
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
-    public void writePassword(String email) {
+    public void typeForgotPasswordEmail(String email) {
         WebElement input = visible(forgotPasswordEmailInput);
         input.clear();
         input.sendKeys(email);
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
-    public void writePasswordForm(String password) {
+    public void typeLoginPassword(String password) {
         WebElement passwordInput = visible(passwordForm);
         passwordInput.clear();
         passwordInput.sendKeys(password);
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
+
     public void typeNumberInput(String value) {
-    	    WebElement input = visible(numberInput);
-    	    input.clear();
-    	    input.sendKeys(value);
-    	    visualPause(LONG_VISUAL_PAUSE_MS);
+        WebElement input = visible(numberInput);
+        input.clear();
+        input.sendKeys(value);
+        visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
     public void increaseNumberInput(int value) {
-    	    WebElement input = visible(numberInput);
-    	    input.click();
-    	    
-    	    for(int index = 0; index < value; index++) {
-    	    	      input.sendKeys(Keys.ARROW_UP);
-    	      	  visualPause(SHORT_VISUAL_PAUSE_MS);
+        WebElement input = visible(numberInput);
+        input.click();
 
-    	    }
-    	   }
-    
+        for (int index = 0; index < value; index++) {
+            input.sendKeys(Keys.ARROW_UP);
+            visualPause(SHORT_VISUAL_PAUSE_MS);
+        }
+    }
+
     /**
      * Faz scroll ate o final da pagina.
      */
     public void scrollToPageBottom() {
-    	    JavascriptExecutor js = (JavascriptExecutor) driver;
-    	    js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-    	    visualPause(LONG_VISUAL_PAUSE_MS);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        visualPause(LONG_VISUAL_PAUSE_MS);
     }
-    
-    
+
     public void scrollUntilNewContentLoads() {
-    	    int initialcount = getInfiniteScrollItemsCount();
-    	    
-    	    scrollToPageBottom();
-    	    
-    	    wait.until(driver -> getInfiniteScrollItemsCount() > initialcount);
-    	    
+        int initialCount = getInfiniteScrollItemsCount();
+
+        scrollToPageBottom();
+
+        wait.until(driver -> {
+            if (getInfiniteScrollItemsCount() > initialCount) {
+                return true;
+            }
+
+            scrollToPageBottom();
+            return getInfiniteScrollItemsCount() > initialCount;
+        });
     }
-    
-    
 
     /**
      * Aliases de compatibilidade.
@@ -575,6 +574,38 @@ public class TheInternetPage {
 
     public void gotoFrames() {
         goToFrames();
+    }
+
+    public void goToQueryUI() {
+        goToJqueryUiMenu();
+    }
+
+    public void goToLoad() {
+        goToInfiniteScroll();
+    }
+
+    public void selectEnabledDowloads() {
+        downloadPdfFromJqueryUiMenu();
+    }
+
+    public void selectBackToJQueryUi() {
+        selectBackToJqueryUi();
+    }
+
+    public void selectMenuFloat() {
+        navigateFloatingMenuAnchors();
+    }
+
+    public void writeForm(String username) {
+        typeUsername(username);
+    }
+
+    public void writePassword(String email) {
+        typeForgotPasswordEmail(email);
+    }
+
+    public void writePasswordForm(String password) {
+        typeLoginPassword(password);
     }
 
     public void selectFilePDF() {
@@ -732,19 +763,19 @@ public class TheInternetPage {
         Select select = new Select(visible(dropdownSelect));
         return select.getFirstSelectedOption().getText();
     }
-    
+
     public String getNumberInputValue() {
-    	   return visible(numberInput).getAttribute("value");
+        return visible(numberInput).getAttribute("value");
     }
-    
+
     public int getInfiniteScrollItemsCount() {
-    	    return driver.findElements(infiniteScrollItems).size();
+        return driver.findElements(infiniteScrollItems).size();
     }
-    
-    public String getTextoJQueryUI() {
-    	    return visible(JQueryUIText).getText();
+
+    public String getJqueryUiDescriptionText() {
+        return visible(jqueryUiDescriptionText).getText();
     }
-    
+
     public void setHorizontalSliderValue(String targetValue) {
         WebElement slider = visible(horizontalSliderInput);
         slider.click();
@@ -764,19 +795,22 @@ public class TheInternetPage {
     }
 
     public String getHorizontalSliderValue() {
-    	  return visible(horizontalSliderValue).getText();
+        return visible(horizontalSliderValue).getText();
     }
-    
+
     /**
      * Formata o valor para ficar igual ao texto exibido na tela.
      */
     private String formatSliderValue(BigDecimal value) {
-    	    return value.stripTrailingZeros().toPlainString(); 
+        return value.stripTrailingZeros().toPlainString();
     }
-    
-    
+
     public boolean isOnDisappearingElementsPage() {
         return driver.getCurrentUrl().contains("/disappearing_elements");
+    }
+
+    public String getTextoJQueryUI() {
+        return getJqueryUiDescriptionText();
     }
 
     /**
@@ -796,14 +830,13 @@ public class TheInternetPage {
             throw new RuntimeException("Execution was interrupted during the visual pause.", exception);
         }
     }
-    
+
     /**
      * Move o mouse ate uma opcao do menu.
      * Esse helper e importante porque o JQuery UI Menu abre submenus por hover.
      */
     private void hover(By locator) {
-    	   WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    	   new Actions(driver).moveToElement(element).perform();
-    	
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        new Actions(driver).moveToElement(element).perform();
     }
 }
