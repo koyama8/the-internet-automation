@@ -1,6 +1,7 @@
 package com.koyama.pages;
 
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class TheInternetPage {
     private final By inputsLink = By.linkText("Inputs");
     private final By infiniteScrollLink = By.linkText("Infinite Scroll");
     private final By jqueryUiMenusLink = By.linkText("JQuery UI Menus");
+    private final By javascriptAlertsLink  = By.linkText("JavaScript Alerts");
 
     /**
      * Seletores CSS.
@@ -90,7 +92,11 @@ public class TheInternetPage {
     private final By infiniteScrollItems = By.cssSelector(".jscroll-added");
     private final By jqueryUiPdfDownloadOption = By.cssSelector("#menu  a[href='/download/jqueryui/menu/menu.pdf']");
     private final By jqueryUiDescriptionText = By.cssSelector("#content p");
-
+    private final By jsAlertButton  = By.cssSelector("#content button[onclick='jsAlert()']");
+    private final By jsConfirmButton = By.cssSelector("button[onclick='jsConfirm()']");
+    private final By jsPromptButton = By.cssSelector("button[onclick='jsPrompt()']");
+    private final By javascriptAlertResult = By.id("result");
+    
     /**
      * Seletores por ID.
      * Aqui ficam elementos mais estaveis da pagina, como campos, mensagens e containers.
@@ -297,6 +303,12 @@ public class TheInternetPage {
         waitForUrl("/infinite_scroll");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
+    
+    public void goToScriptsAlerts() {
+    	    click(javascriptAlertsLink);
+    	    waitForUrl("/javascript_alerts");
+    	    visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
 
     public void openDynamicLoadingExample1() {
         click(dynamicLoadingExample1Link);
@@ -458,6 +470,39 @@ public class TheInternetPage {
 
         click(backToJqueryUiOption);
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectButtonJS() {
+    	  click(jsAlertButton);
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectButtonJSConfirm() {
+    	  click(jsConfirmButton);
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectjsPrompt() {
+    	  click(jsPromptButton);
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void cancelJavaScriptPrompt() {
+    	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+    	  alert.dismiss();
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void typeTextAndAcceptJavaScriptPrompt(String text) {
+    	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+    	  alert.sendKeys(text);
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void acceptJavaScriptAlert() {
+    	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+    	  alert.accept();
+    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void navigateFloatingMenuAnchors() {
@@ -811,6 +856,11 @@ public class TheInternetPage {
 
     public String getTextoJQueryUI() {
         return getJqueryUiDescriptionText();
+    }
+    
+    
+    public String getJavaScriptAlertResultText() {
+    	    return visible(javascriptAlertResult).getText();
     }
 
     /**

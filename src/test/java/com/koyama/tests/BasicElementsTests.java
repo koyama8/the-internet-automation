@@ -358,6 +358,33 @@ public class BasicElementsTests extends UiTestSupport {
             "A pagina deveria carregar novos blocos apos o scroll."
         );
     }
+    
+    @Test
+    public void shoudAlerts() {
+    	   page.openHomePage();
+    	   page.goToScriptsAlerts();
+    	   
+    	   page.selectButtonJS();
+    	   
+  
+    	   page.acceptJavaScriptAlert();
+    	   Assert.assertEquals(page.getJavaScriptAlertResultText(), 
+    			   "You successfully clicked an alert");
+    	   
+    	   page.selectButtonJSConfirm();
+    	   
+    	   
+    	   page.cancelJavaScriptPrompt();
+    	   Assert.assertEquals(page.getJavaScriptAlertResultText(),
+    			   "You clicked: Cancelado",
+    			   "A mensagem final deveria mostrar Cancelado quando o prompt for cancelado.");
+    	   
+    	   page.selectjsPrompt();
+       page.typeTextAndAcceptJavaScriptPrompt("Koyama estudando Selenium");
+    	   
+    	   page.acceptJavaScriptAlert();
+    }
+
 
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {
