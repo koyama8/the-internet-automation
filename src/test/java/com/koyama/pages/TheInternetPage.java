@@ -1,9 +1,7 @@
 package com.koyama.pages;
 
 import java.math.BigDecimal;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
@@ -53,8 +51,8 @@ public class TheInternetPage {
     private final By inputsLink = By.linkText("Inputs");
     private final By infiniteScrollLink = By.linkText("Infinite Scroll");
     private final By jqueryUiMenusLink = By.linkText("JQuery UI Menus");
-    private final By javascriptAlertsLink  = By.linkText("JavaScript Alerts");
-    private final By keyPresses = By.linkText("Key Presses");
+    private final By javascriptAlertsLink = By.linkText("JavaScript Alerts");
+    private final By keyPressesLink = By.linkText("Key Presses");
 
     /**
      * Seletores CSS.
@@ -94,11 +92,11 @@ public class TheInternetPage {
     private final By infiniteScrollItems = By.cssSelector(".jscroll-added");
     private final By jqueryUiPdfDownloadOption = By.cssSelector("#menu  a[href='/download/jqueryui/menu/menu.pdf']");
     private final By jqueryUiDescriptionText = By.cssSelector("#content p");
-    private final By jsAlertButton  = By.cssSelector("#content button[onclick='jsAlert()']");
+    private final By jsAlertButton = By.cssSelector("#content button[onclick='jsAlert()']");
     private final By jsConfirmButton = By.cssSelector("button[onclick='jsConfirm()']");
     private final By jsPromptButton = By.cssSelector("button[onclick='jsPrompt()']");
-    private final By textKeys = By.cssSelector(".example p");
-    
+    private final By keyPressesDescription = By.cssSelector(".example p");
+
     /**
      * Seletores por ID.
      * Aqui ficam elementos mais estaveis da pagina, como campos, mensagens e containers.
@@ -115,8 +113,7 @@ public class TheInternetPage {
     private final By passwordForm = By.id("password");
     private final By horizontalSliderValue = By.id("range");
     private final By keyInput = By.id("target");
-    private final By javascriptAlertResult = By.id("result");
-
+    private final By pageResultText = By.id("result");
 
     /**
      * Seletores por name.
@@ -308,17 +305,17 @@ public class TheInternetPage {
         waitForUrl("/infinite_scroll");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToScriptsAlerts() {
-    	    click(javascriptAlertsLink);
-    	    waitForUrl("/javascript_alerts");
-    	    visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToJavaScriptAlerts() {
+        click(javascriptAlertsLink);
+        waitForUrl("/javascript_alerts");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToKeyInput() {
-    	   click(keyPresses);
-    	   waitForUrl("/key_presses");
-    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToKeyPresses() {
+        click(keyPressesLink);
+        waitForUrl("/key_presses");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void openDynamicLoadingExample1() {
@@ -482,63 +479,61 @@ public class TheInternetPage {
         click(backToJqueryUiOption);
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void selectButtonJS() {
-    	  click(jsAlertButton);
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void clickJavaScriptAlertButton() {
+        click(jsAlertButton);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    
-    public void selectButtonJSConfirm() {
-    	  click(jsConfirmButton);
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void clickJavaScriptConfirmButton() {
+        click(jsConfirmButton);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void selectjsPrompt() {
-    	  click(jsPromptButton);
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void clickJavaScriptPromptButton() {
+        click(jsPromptButton);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void cancelJavaScriptPrompt() {
-    	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-    	  alert.dismiss();
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void dismissJavaScriptAlert() {
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.dismiss();
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void sendwriteKeys() {
-    	    WebElement input = visible(keyInput);
-    	    String [] letras = {"A","B","C","D"};
-    	    
-    	    
-    	    for(String letra : letras) {
-    	    	   input.sendKeys(letra);
-    	    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
-    	    	    input.clear();
-    	    }   	    
+
+    public void typeSampleKeysOneByOne() {
+        WebElement input = visible(keyInput);
+        String[] letters = {"A", "B", "C", "D"};
+
+        for (String letter : letters) {
+            input.sendKeys(letter);
+            visualPause(DEFAULT_VISUAL_PAUSE_MS);
+            input.clear();
+        }
     }
-    
+
     public void pressKeysSlowly(Keys[] keys) {
-    	    WebElement input = visible(keyInput);
-    	    
-    	    input.click();
-    	    
-    	    for(Keys key : keys ) {
-    	    	      input.sendKeys(key);
-    	    	      visualPause(DEFAULT_VISUAL_PAUSE_MS);
-    	    	      input.clear();
-    	    }
+        WebElement input = visible(keyInput);
+
+        input.click();
+
+        for (Keys key : keys) {
+            input.sendKeys(key);
+            visualPause(DEFAULT_VISUAL_PAUSE_MS);
+            input.clear();
+        }
     }
-    
-    public void typeTextAndAcceptJavaScriptPrompt(String text) {
-    	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-    	  alert.sendKeys(text);
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void typeTextInJavaScriptPrompt(String text) {
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.sendKeys(text);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
+
     public void acceptJavaScriptAlert() {
-    	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-    	  alert.accept();
-    	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.accept();
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void navigateFloatingMenuAnchors() {
@@ -665,7 +660,19 @@ public class TheInternetPage {
         goToInfiniteScroll();
     }
 
+    public void goToScriptsAlerts() {
+        goToJavaScriptAlerts();
+    }
+
+    public void goToKeyInput() {
+        goToKeyPresses();
+    }
+
     public void selectEnabledDowloads() {
+        downloadPdfFromJqueryUiMenu();
+    }
+
+    public void selectEnabledDownloads() {
         downloadPdfFromJqueryUiMenu();
     }
 
@@ -699,6 +706,30 @@ public class TheInternetPage {
 
     public void selectButtonForm() {
         submitLoginForm();
+    }
+
+    public void selectButtonJS() {
+        clickJavaScriptAlertButton();
+    }
+
+    public void selectButtonJSConfirm() {
+        clickJavaScriptConfirmButton();
+    }
+
+    public void selectjsPrompt() {
+        clickJavaScriptPromptButton();
+    }
+
+    public void cancelJavaScriptPrompt() {
+        dismissJavaScriptAlert();
+    }
+
+    public void sendwriteKeys() {
+        typeSampleKeysOneByOne();
+    }
+
+    public void typeTextAndAcceptJavaScriptPrompt(String text) {
+        typeTextInJavaScriptPrompt(text);
     }
 
     /**
@@ -893,14 +924,21 @@ public class TheInternetPage {
     public String getTextoJQueryUI() {
         return getJqueryUiDescriptionText();
     }
-    
-    
+
     public String getJavaScriptAlertResultText() {
-    	    return visible(javascriptAlertResult).getText();
+        return visible(pageResultText).getText();
     }
-    
+
+    public String getKeyPressesResultText() {
+        return visible(pageResultText).getText();
+    }
+
+    public String getKeyPressesDescriptionText() {
+        return visible(keyPressesDescription).getText();
+    }
+
     public String getResultKeys() {
-    	  return visible(textKeys).getText();
+        return getKeyPressesDescriptionText();
     }
 
     /**

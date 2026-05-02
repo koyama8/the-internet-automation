@@ -359,50 +359,55 @@ public class BasicElementsTests extends UiTestSupport {
             "A pagina deveria carregar novos blocos apos o scroll."
         );
     }
-    
+
     @Test
-    public void shoudAlerts() {
-    	   page.openHomePage();
-    	   page.goToScriptsAlerts();
-    	   
-    	   page.selectButtonJS();
-    	   
-  
-    	   page.acceptJavaScriptAlert();
-    	   Assert.assertEquals(page.getJavaScriptAlertResultText(), 
-    			   "You successfully clicked an alert");
-    	   
-    	   page.selectButtonJSConfirm();
-    	   
-    	   
-    	   page.cancelJavaScriptPrompt();
-    	   Assert.assertEquals(page.getJavaScriptAlertResultText(),
-    			   "You clicked: Cancelado",
-    			   "A mensagem final deveria mostrar Cancelado quando o prompt for cancelado.");
-    	   
-    	   page.selectjsPrompt();
-       page.typeTextAndAcceptJavaScriptPrompt("Koyama estudando Selenium");
-    	   
-    	   page.acceptJavaScriptAlert();
+    public void shouldHandleJavaScriptAlertsSuccessfully() {
+        page.openHomePage();
+        page.goToJavaScriptAlerts();
+
+        page.clickJavaScriptAlertButton();
+
+        page.acceptJavaScriptAlert();
+        Assert.assertEquals(
+            page.getJavaScriptAlertResultText(),
+            "You successfully clicked an alert"
+        );
+
+        page.clickJavaScriptConfirmButton();
+
+        page.dismissJavaScriptAlert();
+        Assert.assertEquals(
+            page.getJavaScriptAlertResultText(),
+            "You clicked: Cancelado",
+            "A mensagem final deveria mostrar Cancelado quando o prompt for cancelado."
+        );
+
+        page.clickJavaScriptPromptButton();
+        page.typeTextInJavaScriptPrompt("Koyama estudando Selenium");
+
+        page.acceptJavaScriptAlert();
     }
 
     @Test
-    public void sendKeysPresses() {
- 	   page.openHomePage();
- 	   page.goToKeyInput();
- 	   
- 	   page.sendwriteKeys();
- 	   Assert.assertEquals(page.getResultKeys(),  
- 			   "Key presses are often used to interact with a website (e.g., tab order, enter, escape, etc.). "
- 			   + "Press a key and see what you inputted.");
- 	   
- 	   Keys[] keys = {Keys.SPACE,Keys.BACK_SPACE,Keys.TAB};
-	   
-	   page.pressKeysSlowly(keys);
-	   Assert.assertEquals(page.getJavaScriptAlertResultText(), 
-			   "You entered: TAB");
-   }
+    public void shouldDisplayPressedKeyResultSuccessfully() {
+        page.openHomePage();
+        page.goToKeyPresses();
 
+        page.typeSampleKeysOneByOne();
+        Assert.assertEquals(
+            page.getKeyPressesDescriptionText(),
+            "Key presses are often used to interact with a website (e.g., tab order, enter, escape, etc.). "
+                + "Press a key and see what you inputted."
+        );
+
+        Keys[] keysToPress = {Keys.SPACE, Keys.BACK_SPACE, Keys.TAB};
+
+        page.pressKeysSlowly(keysToPress);
+        Assert.assertEquals(
+            page.getKeyPressesResultText(),
+            "You entered: TAB"
+        );
+    }
 
     @Test
     public void shouldSelectDropdownOptionsSuccessfully() {
