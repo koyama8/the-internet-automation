@@ -3,6 +3,7 @@ package com.koyama.pages;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
@@ -53,6 +54,7 @@ public class TheInternetPage {
     private final By infiniteScrollLink = By.linkText("Infinite Scroll");
     private final By jqueryUiMenusLink = By.linkText("JQuery UI Menus");
     private final By javascriptAlertsLink  = By.linkText("JavaScript Alerts");
+    private final By keyPresses = By.linkText("Key Presses");
 
     /**
      * Seletores CSS.
@@ -95,7 +97,7 @@ public class TheInternetPage {
     private final By jsAlertButton  = By.cssSelector("#content button[onclick='jsAlert()']");
     private final By jsConfirmButton = By.cssSelector("button[onclick='jsConfirm()']");
     private final By jsPromptButton = By.cssSelector("button[onclick='jsPrompt()']");
-    private final By javascriptAlertResult = By.id("result");
+    private final By textKeys = By.cssSelector(".example p");
     
     /**
      * Seletores por ID.
@@ -112,6 +114,9 @@ public class TheInternetPage {
     private final By usernameForm = By.id("username");
     private final By passwordForm = By.id("password");
     private final By horizontalSliderValue = By.id("range");
+    private final By keyInput = By.id("target");
+    private final By javascriptAlertResult = By.id("result");
+
 
     /**
      * Seletores por name.
@@ -309,6 +314,12 @@ public class TheInternetPage {
     	    waitForUrl("/javascript_alerts");
     	    visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
+    
+    public void goToKeyInput() {
+    	   click(keyPresses);
+    	   waitForUrl("/key_presses");
+    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
 
     public void openDynamicLoadingExample1() {
         click(dynamicLoadingExample1Link);
@@ -477,6 +488,7 @@ public class TheInternetPage {
     	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
     
+    
     public void selectButtonJSConfirm() {
     	  click(jsConfirmButton);
     	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
@@ -491,6 +503,30 @@ public class TheInternetPage {
     	  Alert alert = wait.until(ExpectedConditions.alertIsPresent());
     	  alert.dismiss();
     	  visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void sendwriteKeys() {
+    	    WebElement input = visible(keyInput);
+    	    String [] letras = {"A","B","C","D"};
+    	    
+    	    
+    	    for(String letra : letras) {
+    	    	   input.sendKeys(letra);
+    	    	   visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    	    	    input.clear();
+    	    }   	    
+    }
+    
+    public void pressKeysSlowly(Keys[] keys) {
+    	    WebElement input = visible(keyInput);
+    	    
+    	    input.click();
+    	    
+    	    for(Keys key : keys ) {
+    	    	      input.sendKeys(key);
+    	    	      visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    	    	      input.clear();
+    	    }
     }
     
     public void typeTextAndAcceptJavaScriptPrompt(String text) {
@@ -861,6 +897,10 @@ public class TheInternetPage {
     
     public String getJavaScriptAlertResultText() {
     	    return visible(javascriptAlertResult).getText();
+    }
+    
+    public String getResultKeys() {
+    	  return visible(textKeys).getText();
     }
 
     /**

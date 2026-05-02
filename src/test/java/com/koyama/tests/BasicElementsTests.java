@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.openqa.selenium.Keys;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -384,6 +385,23 @@ public class BasicElementsTests extends UiTestSupport {
     	   
     	   page.acceptJavaScriptAlert();
     }
+
+    @Test
+    public void sendKeysPresses() {
+ 	   page.openHomePage();
+ 	   page.goToKeyInput();
+ 	   
+ 	   page.sendwriteKeys();
+ 	   Assert.assertEquals(page.getResultKeys(),  
+ 			   "Key presses are often used to interact with a website (e.g., tab order, enter, escape, etc.). "
+ 			   + "Press a key and see what you inputted.");
+ 	   
+ 	   Keys[] keys = {Keys.SPACE,Keys.BACK_SPACE,Keys.TAB};
+	   
+	   page.pressKeysSlowly(keys);
+	   Assert.assertEquals(page.getJavaScriptAlertResultText(), 
+			   "You entered: TAB");
+   }
 
 
     @Test
