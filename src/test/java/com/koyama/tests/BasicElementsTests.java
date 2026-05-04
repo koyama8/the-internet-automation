@@ -1,5 +1,7 @@
 package com.koyama.tests;
 
+import static org.testng.Assert.assertTrue;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -425,6 +427,30 @@ public class BasicElementsTests extends UiTestSupport {
             );
         }
     }
+    
+    @Test
+    public void shoudSelectWindows() {
+    	page.openHomePage();
+    	page.goToWindows();
+    	
+    	page.selectWindows();
+    	Assert.assertEquals(page.geTextWindows(), 
+    			"Opening a new window");	
+    }
+    
+    @Test
+    public void selectNotificationMessages() {
+    	page.openHomePage();
+    	page.goToNotification();
+    	
+    	page.selectNotification();
+
+    	String mensagem= page.getNotificationMessage();
+    	assertTrue(mensagem.contains("Action successful") ||
+    			mensagem.contains(" Action unsuccesful, please try agains"),
+    			"Frase incorreta");
+    }
+    
 
     @Test
     public void shouldNavigateThroughDisappearingElementsAndReturn() {

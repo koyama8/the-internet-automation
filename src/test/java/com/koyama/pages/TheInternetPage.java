@@ -2,6 +2,7 @@ package com.koyama.pages;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
@@ -53,7 +54,9 @@ public class TheInternetPage {
     private final By jqueryUiMenusLink = By.linkText("JQuery UI Menus");
     private final By javascriptAlertsLink = By.linkText("JavaScript Alerts");
     private final By keyPressesLink = By.linkText("Key Presses");
-
+    private final By windowsMultiple = By.linkText("Multiple Windows");
+    private final By notificationMessages = By.linkText("Notification Messages");
+    
     /**
      * Seletores CSS.
      * Aqui ficam botoes, textos, links internos, listas e elementos visuais da tela.
@@ -96,6 +99,9 @@ public class TheInternetPage {
     private final By jsConfirmButton = By.cssSelector("button[onclick='jsConfirm()']");
     private final By jsPromptButton = By.cssSelector("button[onclick='jsPrompt()']");
     private final By keyPressesDescription = By.cssSelector(".example p");
+    private final By windowsText = By.cssSelector(".example h3");
+    private final By messageNotification = By.cssSelector("#content a[href='/notification_message'] ");
+    private final By messageJs = By.cssSelector("#flash");
 
     /**
      * Seletores por ID.
@@ -142,7 +148,10 @@ public class TheInternetPage {
         By.xpath("//ul[@id='menu']//a[normalize-space()='Downloads']");
     private final By backToJqueryUiOption =
         By.xpath("//ul[@id='menu']//a[normalize-space()='Back to JQuery UI']");
-
+    private final By linkWindows =
+    	By.xpath("//div[@id='content']//a[normalize-space()='Click Here']");
+    
+    
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -226,6 +235,18 @@ public class TheInternetPage {
         click(dropdownLink);
         waitForUrl("/dropdown");
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToWindows() {
+    	 click(windowsMultiple);
+    	 waitForUrl("/windows");
+    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToNotification() {
+    	 click(notificationMessages);
+    	 waitForUrl("/notification_message_rendered");
+    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void goToDynamicContent() {
@@ -511,6 +532,19 @@ public class TheInternetPage {
             input.clear();
         }
     }
+    
+    public void selectWindows() {
+    	 click(linkWindows);
+    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void selectNotification() {
+       
+    	for (int i = 0; i < 2; i++) {
+	     click(messageNotification);
+	     visualPause(DEFAULT_VISUAL_PAUSE_MS);
+	 }
+   }
 
     public void pressKeysSlowly(Keys[] keys) {
         WebElement input = visible(keyInput);
@@ -874,6 +908,17 @@ public class TheInternetPage {
     public String getSelectedDropdownOptionText() {
         Select select = new Select(visible(dropdownSelect));
         return select.getFirstSelectedOption().getText();
+    }
+    
+    public String geTextWindows() {
+    	return visible(windowsText).getText();
+    }
+    
+    public String getNotificationMessage() {
+    	return visible(messageJs)
+    			.getText()
+    			.split("\n")[0]
+    			.trim();
     }
 
     public String getNumberInputValue() {
