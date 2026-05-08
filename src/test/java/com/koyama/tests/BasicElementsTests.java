@@ -451,6 +451,18 @@ public class BasicElementsTests extends UiTestSupport {
     			"Frase incorreta");
     }
     
+    @Test
+    public void selectRedirection() {
+    	page.openHomePage();
+    	page.goToRedirection();
+    	
+    	page.selectlinkRedirection();
+    	
+        String textoEsperado = "This page returned a 200 status code.\n\n"
+                + "For a definition and common list of HTTP status codes, go here";
+        
+    	Assert.assertEquals(textoEsperado, page.geTexRedirection());
+    }
 
     @Test
     public void shouldNavigateThroughDisappearingElementsAndReturn() {

@@ -56,7 +56,7 @@ public class TheInternetPage {
     private final By keyPressesLink = By.linkText("Key Presses");
     private final By windowsMultiple = By.linkText("Multiple Windows");
     private final By notificationMessages = By.linkText("Notification Messages");
-    
+    private final By redirectLink = By.linkText("Redirect Link");    
     /**
      * Seletores CSS.
      * Aqui ficam botoes, textos, links internos, listas e elementos visuais da tela.
@@ -102,6 +102,9 @@ public class TheInternetPage {
     private final By windowsText = By.cssSelector(".example h3");
     private final By messageNotification = By.cssSelector("#content a[href='/notification_message'] ");
     private final By messageJs = By.cssSelector("#flash");
+    private final By hereClik = By.cssSelector("#content a[href='redirect']");
+    private final By cod200 = By.cssSelector("#content a[href='status_codes/200']");
+    private final By redirectonText = By.cssSelector("#content p");
 
     /**
      * Seletores por ID.
@@ -246,6 +249,12 @@ public class TheInternetPage {
     public void goToNotification() {
     	 click(notificationMessages);
     	 waitForUrl("/notification_message_rendered");
+    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    }
+    
+    public void goToRedirection() {
+    	 click(redirectLink);
+    	 waitForUrl("/redirector");
     	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
@@ -545,7 +554,16 @@ public class TheInternetPage {
 	     visualPause(DEFAULT_VISUAL_PAUSE_MS);
 	 }
    }
+  
+    public void selectlinkRedirection() {
+    	click(hereClik);
+    	
+    	click(cod200);
+    	visualPause(LONG_VISUAL_PAUSE_MS);
 
+
+    }
+    
     public void pressKeysSlowly(Keys[] keys) {
         WebElement input = visible(keyInput);
 
@@ -912,6 +930,10 @@ public class TheInternetPage {
     
     public String geTextWindows() {
     	return visible(windowsText).getText();
+    }
+    
+    public String geTexRedirection() {
+    	return visible(redirectonText).getText();
     }
     
     public String getNotificationMessage() {
