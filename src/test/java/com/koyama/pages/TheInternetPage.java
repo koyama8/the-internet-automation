@@ -2,7 +2,6 @@ package com.koyama.pages;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
@@ -54,8 +53,8 @@ public class TheInternetPage {
     private final By jqueryUiMenusLink = By.linkText("JQuery UI Menus");
     private final By javascriptAlertsLink = By.linkText("JavaScript Alerts");
     private final By keyPressesLink = By.linkText("Key Presses");
-    private final By windowsMultiple = By.linkText("Multiple Windows");
-    private final By notificationMessages = By.linkText("Notification Messages");
+    private final By multipleWindowsLink = By.linkText("Multiple Windows");
+    private final By notificationMessagesLink = By.linkText("Notification Messages");
     private final By redirectLink = By.linkText("Redirect Link");    
     /**
      * Seletores CSS.
@@ -68,26 +67,26 @@ public class TheInternetPage {
     private final By forgotPasswordSubmitButton = By.cssSelector("#forgot_password button[type='submit']");
     private final By loginSubmitButton = By.cssSelector("#login button[type='submit']");
     private final By abTestingParagraph = By.cssSelector("#content .example p");
-    private final By brokenImages = By.cssSelector(".example img");
+    private final By brokenImageElements = By.cssSelector(".example img");
     private final By brokenImagesTitle = By.cssSelector("#content .example h3");
     private final By challengingDomParagraph = By.cssSelector(".example p");
-    private final By checkboxesInput = By.cssSelector("#checkboxes input[type='checkbox']");
+    private final By checkboxInputs = By.cssSelector("#checkboxes input[type='checkbox']");
     private final By contextMenuDescription = By.cssSelector("#content p:nth-of-type(1)");
     private final By dynamicContentDescription = By.cssSelector("#content p:nth-of-type(1)");
     private final By dynamicLoadingDescription = By.cssSelector("#content p");
     private final By dynamicLoadingExample1Link = By.cssSelector("#content a[href='/dynamic_loading/1']");
     private final By dynamicLoadingExample2Link = By.cssSelector("#content a[href='/dynamic_loading/2']");
     private final By dynamicLoadingTitle = By.cssSelector("#content h3");
-    private final By headerA = By.cssSelector("#column-a header");
-    private final By headerB = By.cssSelector("#column-b header");
+    private final By columnAHeader = By.cssSelector("#column-a header");
+    private final By columnBHeader = By.cssSelector("#column-b header");
     private final By homeLink = By.cssSelector("a[href='/']");
-    private final By closeTextButton = By.cssSelector(".modal-footer p");
-    private final By closeText = By.cssSelector(".modal-body p");
+    private final By entryAdCloseText = By.cssSelector(".modal-footer p");
+    private final By entryAdBodyText = By.cssSelector(".modal-body p");
     private final By floatingMenuHomeLink = By.cssSelector("#menu a[href='#home']");
     private final By floatingMenuNewsLink = By.cssSelector("#menu a[href='#news']");
     private final By floatingMenuContactLink = By.cssSelector("#menu a[href='#contact']");
     private final By floatingMenuAboutLink = By.cssSelector("#menu a[href='#about']");
-    private final By framesLinkNested = By.cssSelector("#content a[href='/nested_frames']");
+    private final By nestedFramesLink = By.cssSelector("#content a[href='/nested_frames']");
     private final By downloadLinks = By.cssSelector("#content .example a");
     private final By secureAreaTitle = By.cssSelector("#content h2");
     private final By horizontalSliderInput = By.cssSelector("input[type='range']");
@@ -99,12 +98,12 @@ public class TheInternetPage {
     private final By jsConfirmButton = By.cssSelector("button[onclick='jsConfirm()']");
     private final By jsPromptButton = By.cssSelector("button[onclick='jsPrompt()']");
     private final By keyPressesDescription = By.cssSelector(".example p");
-    private final By windowsText = By.cssSelector(".example h3");
-    private final By messageNotification = By.cssSelector("#content a[href='/notification_message'] ");
-    private final By messageJs = By.cssSelector("#flash");
-    private final By hereClik = By.cssSelector("#content a[href='redirect']");
-    private final By cod200 = By.cssSelector("#content a[href='status_codes/200']");
-    private final By redirectonText = By.cssSelector("#content p");
+    private final By multipleWindowsHeading = By.cssSelector(".example h3");
+    private final By notificationMessageLink = By.cssSelector("#content a[href='/notification_message'] ");
+    private final By notificationFlashMessage = By.cssSelector("#flash");
+    private final By redirectHereLink = By.cssSelector("#content a[href='redirect']");
+    private final By statusCode200Link = By.cssSelector("#content a[href='status_codes/200']");
+    private final By redirectionStatusCodeText = By.cssSelector("#content p");
 
     /**
      * Seletores por ID.
@@ -118,11 +117,11 @@ public class TheInternetPage {
     private final By dynamicLoadingFinishText = By.id("finish");
     private final By forgotPasswordEmailInput = By.id("email");
     private final By flashMessage = By.id("flash");
-    private final By usernameForm = By.id("username");
-    private final By passwordForm = By.id("password");
+    private final By usernameInput = By.id("username");
+    private final By passwordInput = By.id("password");
     private final By horizontalSliderValue = By.id("range");
-    private final By keyInput = By.id("target");
-    private final By pageResultText = By.id("result");
+    private final By keyPressesInput = By.id("target");
+    private final By resultMessage = By.id("result");
 
     /**
      * Seletores por name.
@@ -151,8 +150,8 @@ public class TheInternetPage {
         By.xpath("//ul[@id='menu']//a[normalize-space()='Downloads']");
     private final By backToJqueryUiOption =
         By.xpath("//ul[@id='menu']//a[normalize-space()='Back to JQuery UI']");
-    private final By linkWindows =
-    	By.xpath("//div[@id='content']//a[normalize-space()='Click Here']");
+    private final By newWindowLink =
+        By.xpath("//div[@id='content']//a[normalize-space()='Click Here']");
     
     
     public TheInternetPage(WebDriver driver, WebDriverWait wait) {
@@ -240,22 +239,22 @@ public class TheInternetPage {
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
     
-    public void goToWindows() {
-    	 click(windowsMultiple);
-    	 waitForUrl("/windows");
-    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    public void goToMultipleWindows() {
+        click(multipleWindowsLink);
+        waitForUrl("/windows");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToNotification() {
-    	 click(notificationMessages);
-    	 waitForUrl("/notification_message_rendered");
-    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToNotificationMessages() {
+        click(notificationMessagesLink);
+        waitForUrl("/notification_message_rendered");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void goToRedirection() {
-    	 click(redirectLink);
-    	 waitForUrl("/redirector");
-    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+
+    public void goToRedirectLink() {
+        click(redirectLink);
+        waitForUrl("/redirector");
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
     public void goToDynamicContent() {
@@ -430,8 +429,8 @@ public class TheInternetPage {
         Actions actions = new Actions(driver);
         actions.dragAndDrop(source, target).perform();
 
-        wait.until(ExpectedConditions.textToBe(headerA, "B"));
-        wait.until(ExpectedConditions.textToBe(headerB, "A"));
+        wait.until(ExpectedConditions.textToBe(columnAHeader, "B"));
+        wait.until(ExpectedConditions.textToBe(columnBHeader, "A"));
     }
 
     public void enableInputField() {
@@ -455,7 +454,7 @@ public class TheInternetPage {
     }
 
     public void selectAllCheckboxes() {
-        List<WebElement> allCheckboxes = visibleAll(checkboxesInput);
+        List<WebElement> allCheckboxes = visibleAll(checkboxInputs);
 
         for (WebElement checkbox : allCheckboxes) {
             if (!checkbox.isSelected()) {
@@ -464,7 +463,7 @@ public class TheInternetPage {
         }
     }
 
-    public void selectCloseLink() {
+    public void closeEntryAd() {
         click(entryAdCloseButton);
         visualPause(SHORT_VISUAL_PAUSE_MS);
     }
@@ -475,8 +474,8 @@ public class TheInternetPage {
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
-    public void selectLinkNested() {
-        click(framesLinkNested);
+    public void openNestedFrames() {
+        click(nestedFramesLink);
         waitForUrl("/nested_frames");
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
@@ -501,7 +500,7 @@ public class TheInternetPage {
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
 
-    public void selectBackToJqueryUi() {
+    public void clickBackToJqueryUiMenuOption() {
         hover(enabledJqueryUiOption);
         visible(backToJqueryUiOption);
         visualPause(DEFAULT_VISUAL_PAUSE_MS);
@@ -532,7 +531,7 @@ public class TheInternetPage {
     }
 
     public void typeSampleKeysOneByOne() {
-        WebElement input = visible(keyInput);
+        WebElement input = visible(keyPressesInput);
         String[] letters = {"A", "B", "C", "D"};
 
         for (String letter : letters) {
@@ -542,30 +541,26 @@ public class TheInternetPage {
         }
     }
     
-    public void selectWindows() {
-    	 click(linkWindows);
-    	 visualPause(DEFAULT_VISUAL_PAUSE_MS);
+    public void openNewWindowFromMultipleWindowsPage() {
+        click(newWindowLink);
+        visualPause(DEFAULT_VISUAL_PAUSE_MS);
     }
-    
-    public void selectNotification() {
-       
-    	for (int i = 0; i < 2; i++) {
-	     click(messageNotification);
-	     visualPause(DEFAULT_VISUAL_PAUSE_MS);
-	 }
-   }
-  
-    public void selectlinkRedirection() {
-    	click(hereClik);
-    	
-    	click(cod200);
-    	visualPause(LONG_VISUAL_PAUSE_MS);
 
-
+    public void refreshNotificationMessageTwice() {
+        for (int attempt = 0; attempt < 2; attempt++) {
+            click(notificationMessageLink);
+            visualPause(DEFAULT_VISUAL_PAUSE_MS);
+        }
     }
-    
+
+    public void openStatusCode200FromRedirectPage() {
+        click(redirectHereLink);
+        click(statusCode200Link);
+        visualPause(LONG_VISUAL_PAUSE_MS);
+    }
+
     public void pressKeysSlowly(Keys[] keys) {
-        WebElement input = visible(keyInput);
+        WebElement input = visible(keyPressesInput);
 
         input.click();
 
@@ -619,7 +614,7 @@ public class TheInternetPage {
     }
 
     public void typeUsername(String username) {
-        WebElement input = visible(usernameForm);
+        WebElement input = visible(usernameInput);
         input.clear();
         input.sendKeys(username);
         visualPause(LONG_VISUAL_PAUSE_MS);
@@ -633,9 +628,9 @@ public class TheInternetPage {
     }
 
     public void typeLoginPassword(String password) {
-        WebElement passwordInput = visible(passwordForm);
-        passwordInput.clear();
-        passwordInput.sendKeys(password);
+        WebElement input = visible(passwordInput);
+        input.clear();
+        input.sendKeys(password);
         visualPause(LONG_VISUAL_PAUSE_MS);
     }
 
@@ -681,115 +676,11 @@ public class TheInternetPage {
     }
 
     /**
-     * Aliases de compatibilidade.
-     * Este bloco foi mantido para nao quebrar chamadas antigas do projeto.
-     */
-    public void goToFileDowload() {
-        goToFileDownload();
-    }
-
-    public void gotoMenuFloat() {
-        goToFloatingMenu();
-    }
-
-    public void gotoPassword() {
-        goToForgotPassword();
-    }
-
-    public void gotoForm() {
-        goToFormAuthentication();
-    }
-
-    public void gotoFrames() {
-        goToFrames();
-    }
-
-    public void goToQueryUI() {
-        goToJqueryUiMenu();
-    }
-
-    public void goToLoad() {
-        goToInfiniteScroll();
-    }
-
-    public void goToScriptsAlerts() {
-        goToJavaScriptAlerts();
-    }
-
-    public void goToKeyInput() {
-        goToKeyPresses();
-    }
-
-    public void selectEnabledDowloads() {
-        downloadPdfFromJqueryUiMenu();
-    }
-
-    public void selectEnabledDownloads() {
-        downloadPdfFromJqueryUiMenu();
-    }
-
-    public void selectBackToJQueryUi() {
-        selectBackToJqueryUi();
-    }
-
-    public void selectMenuFloat() {
-        navigateFloatingMenuAnchors();
-    }
-
-    public void writeForm(String username) {
-        typeUsername(username);
-    }
-
-    public void writePassword(String email) {
-        typeForgotPasswordEmail(email);
-    }
-
-    public void writePasswordForm(String password) {
-        typeLoginPassword(password);
-    }
-
-    public void selectFilePDF() {
-        downloadFirstAvailableFile();
-    }
-
-    public void selectButton() {
-        submitForgotPasswordRequest();
-    }
-
-    public void selectButtonForm() {
-        submitLoginForm();
-    }
-
-    public void selectButtonJS() {
-        clickJavaScriptAlertButton();
-    }
-
-    public void selectButtonJSConfirm() {
-        clickJavaScriptConfirmButton();
-    }
-
-    public void selectjsPrompt() {
-        clickJavaScriptPromptButton();
-    }
-
-    public void cancelJavaScriptPrompt() {
-        dismissJavaScriptAlert();
-    }
-
-    public void sendwriteKeys() {
-        typeSampleKeysOneByOne();
-    }
-
-    public void typeTextAndAcceptJavaScriptPrompt(String text) {
-        typeTextInJavaScriptPrompt(text);
-    }
-
-    /**
      * Metodos de leitura e validacao.
      * Este bloco fica no final porque ele reune os retornos usados nos asserts dos testes.
      */
     public boolean areAllCheckboxesSelected() {
-        List<WebElement> allCheckboxes = driver.findElements(checkboxesInput);
+        List<WebElement> allCheckboxes = driver.findElements(checkboxInputs);
 
         for (WebElement checkbox : allCheckboxes) {
             if (!checkbox.isSelected()) {
@@ -801,7 +692,7 @@ public class TheInternetPage {
     }
 
     public int countBrokenImages() {
-        List<WebElement> images = visibleAll(brokenImages);
+        List<WebElement> images = visibleAll(brokenImageElements);
         JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
         int brokenImagesCount = 0;
 
@@ -847,11 +738,11 @@ public class TheInternetPage {
     }
 
     public String getColumnAHeaderText() {
-        return visible(headerA).getText();
+        return visible(columnAHeader).getText();
     }
 
     public String getColumnBHeaderText() {
-        return visible(headerB).getText();
+        return visible(columnBHeader).getText();
     }
 
     public String getContextMenuAlertText() {
@@ -891,16 +782,16 @@ public class TheInternetPage {
         return visible(dynamicLoadingTitle).getText();
     }
 
-    public String getEntryText() {
-        return visible(closeText).getText();
+    public String getEntryAdBodyText() {
+        return visible(entryAdBodyText).getText();
     }
 
-    public String getEntryTextAd() {
+    public String getEntryAdPageInformationText() {
         return visible(entryAdInformationText).getText();
     }
 
-    public String getEntryTextButton() {
-        return visible(closeTextButton).getText();
+    public String getEntryAdCloseText() {
+        return visible(entryAdCloseText).getText();
     }
 
     public String getFlashMessageText() {
@@ -928,19 +819,19 @@ public class TheInternetPage {
         return select.getFirstSelectedOption().getText();
     }
     
-    public String geTextWindows() {
-    	return visible(windowsText).getText();
+    public String getMultipleWindowsTitleText() {
+        return visible(multipleWindowsHeading).getText();
     }
-    
-    public String geTexRedirection() {
-    	return visible(redirectonText).getText();
+
+    public String getRedirectionStatusCodeText() {
+        return visible(redirectionStatusCodeText).getText();
     }
-    
+
     public String getNotificationMessage() {
-    	return visible(messageJs)
-    			.getText()
-    			.split("\n")[0]
-    			.trim();
+        return visible(notificationFlashMessage)
+            .getText()
+            .split("\n")[0]
+            .trim();
     }
 
     public String getNumberInputValue() {
@@ -988,24 +879,16 @@ public class TheInternetPage {
         return driver.getCurrentUrl().contains("/disappearing_elements");
     }
 
-    public String getTextoJQueryUI() {
-        return getJqueryUiDescriptionText();
-    }
-
     public String getJavaScriptAlertResultText() {
-        return visible(pageResultText).getText();
+        return visible(resultMessage).getText();
     }
 
     public String getKeyPressesResultText() {
-        return visible(pageResultText).getText();
+        return visible(resultMessage).getText();
     }
 
     public String getKeyPressesDescriptionText() {
         return visible(keyPressesDescription).getText();
-    }
-
-    public String getResultKeys() {
-        return getKeyPressesDescriptionText();
     }
 
     /**

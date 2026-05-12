@@ -16,11 +16,11 @@ public class ScreenshotListener implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        Object currentClass = result.getInstance();
+        Object testInstance = result.getInstance();
 
-        if (currentClass instanceof UiTestSupport) {
-        	UiTestSupport baseTest = (UiTestSupport) currentClass;
-            WebDriver driver = baseTest.getDriver();
+        if (testInstance instanceof UiTestSupport) {
+            UiTestSupport testSupport = (UiTestSupport) testInstance;
+            WebDriver driver = testSupport.getDriver();
 
             if (driver != null) {
                 byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);

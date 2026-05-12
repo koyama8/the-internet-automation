@@ -17,7 +17,7 @@ import com.koyama.listeners.ScreenshotListener;
 import com.koyama.pages.TheInternetPage;
 
 @Listeners(ScreenshotListener.class)
-public class BasicElementsTests extends UiTestSupport {
+public class TheInternetTests extends UiTestSupport {
 
     private TheInternetPage page;
 
@@ -191,22 +191,22 @@ public class BasicElementsTests extends UiTestSupport {
         page.goToEntryAd();
 
         Assert.assertEquals(
-            page.getEntryTextButton(),
+            page.getEntryAdCloseText(),
             "Close",
             "The Entry Ad modal close text is incorrect."
         );
 
         Assert.assertEquals(
-            page.getEntryText(),
+            page.getEntryAdBodyText(),
             "It's commonly used to encourage a user to take an action "
                 + "(e.g., give their e-mail address to sign up for something or disable their ad blocker).",
             "The Entry Ad modal body text is incorrect."
         );
 
-        page.selectCloseLink();
+        page.closeEntryAd();
 
         Assert.assertEquals(
-            page.getEntryTextAd(),
+            page.getEntryAdPageInformationText(),
             "If closed, it will not appear on subsequent page loads.",
             "The Entry Ad page should explain the post-close behaviour."
         );
@@ -290,7 +290,7 @@ public class BasicElementsTests extends UiTestSupport {
         page.openHomePage();
         page.goToFrames();
 
-        page.selectLinkNested();
+        page.openNestedFrames();
         Assert.assertEquals(page.getLeftFrameText(), "LEFT");
         page.navigateBack("/frames");
     }
@@ -337,7 +337,7 @@ public class BasicElementsTests extends UiTestSupport {
         page.openHomePage();
         page.goToJqueryUiMenu();
 
-        page.selectBackToJqueryUi();
+        page.clickBackToJqueryUiMenuOption();
 
         Assert.assertEquals(
             page.getJqueryUiDescriptionText(),
@@ -380,8 +380,8 @@ public class BasicElementsTests extends UiTestSupport {
         page.dismissJavaScriptAlert();
         Assert.assertEquals(
             page.getJavaScriptAlertResultText(),
-            "You clicked: Cancelado",
-            "A mensagem final deveria mostrar Cancelado quando o prompt for cancelado."
+            "You clicked: Cancel",
+            "A mensagem final deveria mostrar Cancel quando o prompt for cancelado."
         );
 
         page.clickJavaScriptPromptButton();
@@ -429,39 +429,39 @@ public class BasicElementsTests extends UiTestSupport {
     }
     
     @Test
-    public void shoudSelectWindows() {
-    	page.openHomePage();
-    	page.goToWindows();
-    	
-    	page.selectWindows();
-    	Assert.assertEquals(page.geTextWindows(), 
-    			"Opening a new window");	
-    }
-    
-    @Test
-    public void selectNotificationMessages() {
-    	page.openHomePage();
-    	page.goToNotification();
-    	
-    	page.selectNotification();
+    public void shouldOpenMultipleWindowsPageAndDisplayHeading() {
+        page.openHomePage();
+        page.goToMultipleWindows();
 
-    	String mensagem= page.getNotificationMessage();
-    	assertTrue(mensagem.contains("Action successful") ||
-    			mensagem.contains(" Action unsuccesful, please try agains"),
-    			"Frase incorreta");
+        page.openNewWindowFromMultipleWindowsPage();
+        Assert.assertEquals(page.getMultipleWindowsTitleText(),
+            "Opening a new window");
     }
-    
+
     @Test
-    public void selectRedirection() {
-    	page.openHomePage();
-    	page.goToRedirection();
-    	
-    	page.selectlinkRedirection();
-    	
-        String textoEsperado = "This page returned a 200 status code.\n\n"
-                + "For a definition and common list of HTTP status codes, go here";
-        
-    	Assert.assertEquals(textoEsperado, page.geTexRedirection());
+    public void shouldDisplayNotificationMessage() {
+        page.openHomePage();
+        page.goToNotificationMessages();
+
+        page.refreshNotificationMessageTwice();
+
+        String notificationMessage = page.getNotificationMessage();
+        assertTrue(notificationMessage.contains("Action successful") ||
+                notificationMessage.contains(" Action unsuccesful, please try agains"),
+            "Frase incorreta");
+    }
+
+    @Test
+    public void shouldOpenStatusCode200FromRedirectPage() {
+        page.openHomePage();
+        page.goToRedirectLink();
+
+        page.openStatusCode200FromRedirectPage();
+
+        String expectedStatusCodeText = "This page returned a 200 status code.\n\n"
+            + "For a definition and common list of HTTP status codes, go here";
+
+        Assert.assertEquals(expectedStatusCodeText, page.getRedirectionStatusCodeText());
     }
 
     @Test

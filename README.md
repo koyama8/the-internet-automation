@@ -49,7 +49,7 @@ the-internet-automation/
 │   ├── pages/
 │   │   └── TheInternetPage.java
 │   └── tests/
-│       └── BasicElementsTests.java
+│       └── TheInternetTests.java
 ├── src/test/resources/
 │   └── allure.properties
 ├── drivers/
